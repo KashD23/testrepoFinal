@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Phishing Emails</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="company-header">
+        <div class="logo">
+            <a href="index.html"><img src="Images/GOCLogo.png" alt="GOCLogo"></a>
+        </div>
+        <div class="company-name">
+            Department of Phishing Prevention
+            <br>
+        </div>
+    </header>
+
+    <main>
+        <div class="rectangle">
+            <div class="pps"><h2>Report a Phishing Email</h2></div>
+            <br>
+            <table class="phishing-table">
+                <thead>
+                    <tr>
+                        <th>From</th>
+                        <th>Subject</th>
+                        <th>Received</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="email-table-body">
+                    <!-- Emails will be dynamically populated from the server -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <div class="pps"></div>
+
+        <div class="footer-links">
+            <a href="#">Terms and Conditions</a> | <a href="#">Privacy</a>
+        </div>
+
+        <div class="footer-logo">
+            <a href="index.html"><img src="Images/CanadaLogo.jpg" alt="Canada Logo"></a>
+        </div>
+    </footer>
+
+    <script>
+        // Fetch phishing emails from the server
+        fetch('/phishing-emails')
+            .then(response => response.json())
+            .then(emails => {
+                const tableBody = document.getElementById('email-table-body');
+                tableBody.innerHTML = ''; // Clear table before adding new rows
+
+                emails.forEach(email => {
+                    const row = document.createElement('tr');
+
+                    const fromCell = document.createElement('td');
+                    fromCell.textContent = email.sender;
+                    row.appendChild(fromCell);
+
+                    const subjectCell = document.createElement('td');
+                    subjectCell.textContent = email.subject;
+                    row.appendChild(subjectCell);
+
+                    const receivedCell = document.createElement('td');
+                    receivedCell.textContent = email.received;
+                    row.appendChild(receivedCell);
+
+                    const actionCell = document.createElement('td');
+                    const reportButton = document.createElement('button');
+                    reportButton.textContent = 'Report';
+                    reportButton.classList.add('report-btn');
+                    reportButton.setAttribute('data-email-id', email.id);
+                    reportButton.addEventListener('click', function() {
+                        const emailId = this.getAttribute('data-email-id');
+                        const row = this.closest('tr');
+                        const from = row.children[0].textContent;
+                        const subject = row.children[1].textContent;
+                        const received = row.children[2].textContent;
+
+                        fetch('/report-email', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ from, subject, received })
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                alert('Email reported successfully!');
+                                row.remove(); // Remove the row from the table after reporting
+                            } else {
+                                alert('Error reporting the email');
+                            }
+                        })
+                        .catch(err => {
+                            console.error("Error:", err);
+                            alert('An error occurred');
+                        });
+                    });
+                    actionCell.appendChild(reportButton);
+                    row.appendChild(actionCell);
+
+                    tableBody.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching phishing emails:', error);
+            });
+    </script>
+</body>
+</html>

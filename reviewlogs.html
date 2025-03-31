@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Logs</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="company-header">
+        <div class="logo">
+            <a href="index.html"><img src="Images/GOCLogo.png" alt="GOCLogo"></a>
+        </div>
+        <div class="company-name">
+            <nav class="nav-bar">
+                <ul>
+                    <li><a href="overview.html">Home</a></li>
+                    <li><a href="reviewReportedPhishingEmails.html">Reports</a></li>
+                    <li><a href="reviewlogs.html">Logs</a></li>
+                    <li><a href="phishingPreventionEmployeeTraining.html">Training</a></li>
+                    <li><a href="generateReports.html">Export Reports</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="rectangle">
+            <div class="pps"><h1>Phishing Detection Logs</h1>
+
+            <table class="phishing-table">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>This feature allows the CRA IT Security Team 
+                            to include training programs and numerous 
+                            phishing prevention simulations to enable 
+                            the employee to fully manage the system.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+            <table class="phishing-table" id="logsTable">
+                <thead>
+                    <tr>
+                        <th>Log ID</th>
+                        <th>Date</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Logs will be populated here dynamically -->
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-links">
+            <a href="#">Terms and Conditions</a> | <a href="#">Privacy</a>
+        </div>
+        <div class="footer-logo">
+            <a href="index.html"><img src="Images/CanadaLogo.jpg" alt="Canada Logo"></a>
+        </div>
+    </footer>
+
+    <script>
+        // Fetch logs from the server and populate the table
+        fetch('/logs')
+            .then(response => response.json())
+            .then(data => {
+                const tbody = document.querySelector('#logsTable tbody');
+                data.forEach(log => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${log.log_id}</td>
+                        <td>${log.date}</td>
+                        <td>${log.description}</td>
+                        <td>${log.status}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+            })
+            .catch(error => console.error('Error fetching logs:', error));
+    </script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Training</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="company-header">
+        <div class="logo">
+            <a href="index.html"><img src="Images/GOCLogo.png" alt="GOC Logo"></a>
+        </div>
+        <div class="company-name">
+            <nav class="nav-bar">
+                <ul>
+                    <li><a href="overview.html">Home</a></li>
+                    <li><a href="reviewReportedPhishingEmails.html">Reports</a></li>
+                    <li><a href="reviewlogs.html">Logs</a></li>
+                    <li><a href="phishingPreventionEmployeeTraining.html">Training</a></li>
+                    <li><a href="generateReports.html">Export Reports</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="rectangle">
+            <div class="pps"><h1>Employee Training</h1>
+                <table class="phishing-table">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>This feature allows the CRA IT Security Team 
+                                to let teams generate reports summarizing 
+                                phishing email activity, detection rates, 
+                                and user interactions.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="loading-message" style="text-align: center; padding: 20px;">
+                Loading resources, please wait...
+            </div>
+
+            <table class="phishing-table" id="resources-table" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Resource</th>
+                        <th>Category</th>
+                        <th>Website Link</th>
+                        <th>Published</th>
+                        <th>Preview</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be dynamically added here by JavaScript -->
+                </tbody>
+            </table>
+            <!-- "Take the Quiz!" Button -->
+            <div style="text-align: center; margin-top: 20px;">
+                <a href="quiz.html">
+                    <button type="button" id="quiz-button">Take the Quiz!</button>
+                </a>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="pps"></div>
+        <div class="footer-links">
+            <a href="#">Terms and Conditions</a> | <a href="#">Privacy</a>
+        </div>
+        <div class="footer-logo">
+            <a href="index.html"><img src="Images/CanadaLogo.jpg" alt="Canada Logo"></a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loadingMessage = document.getElementById('loading-message');
+            const resourcesTable = document.getElementById('resources-table');
+            
+            // Show loading message and hide table initially
+            loadingMessage.style.display = 'block';
+            resourcesTable.style.display = 'none';
+
+            // Fetch resources from the server
+            fetch('/resources')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data && data.length > 0) {
+                        const tableBody = document.querySelector("#resources-table tbody");
+                        
+                        // Clear any existing rows (though there shouldn't be any)
+                        tableBody.innerHTML = '';
+                        
+                        data.forEach(resource => {
+                            const row = document.createElement("tr");
+                            row.innerHTML = `
+                                <td>${resource.resource_name}</td>
+                                <td>${resource.category}</td>
+                                <td><a href="${resource.website_link}" target="_blank">${resource.website_link}</a></td>
+                                <td>${resource.published}</td>
+                                <td>
+                                    ${resource.website_link.endsWith('.mp4') ? `
+                                        <video width="150" height="100" controls>
+                                            <source src="${resource.website_link}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    ` : resource.website_link.endsWith('.png') || resource.website_link.endsWith('.jpg') ? `
+                                        <img src="${resource.website_link}" alt="Resource Image" style="width: 150px; height: auto;">
+                                    ` : resource.website_link.endsWith('.pdf') ? `
+                                        <embed src="${resource.website_link}" type="application/pdf" width="150" height="100">
+                                    ` : 'No preview available'}
+                                </td>
+                            `;
+                            tableBody.appendChild(row);
+                        });
+                        
+                        // Hide loading message and show table
+                        loadingMessage.style.display = 'none';
+                        resourcesTable.style.display = 'table';
+                    } else {
+                        loadingMessage.textContent = 'No resources available.';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching resources:', error);
+                    loadingMessage.textContent = 'Failed to load resources. Please try again later.';
+                });
+        });
+    </script>
+</body>
+</html>
