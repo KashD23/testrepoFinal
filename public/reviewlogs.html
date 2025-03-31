@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Logs | Phishing Prevention</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        :root {
+            --primary: #004c9b;
+            --primary-dark: #003366;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+        
+        .logs-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--light-gray);
+        }
+        
+        .logs-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .logs-title {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .logs-description {
+            color: var(--gray);
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            padding: 1rem;
+            background: var(--light);
+            border-radius: 8px;
+        }
+        
+        .logs-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        
+        .logs-table th {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+            position: sticky;
+            top: 0;
+        }
+        
+        .logs-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--light-gray);
+            vertical-align: top;
+        }
+        
+        .logs-table tr:hover {
+            background: rgba(0, 76, 155, 0.03);
+        }
+        
+        .status {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+        
+        .status-resolved {
+            background: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+        }
+        
+        .status-pending {
+            background: rgba(255, 193, 7, 0.1);
+            color: var(--warning);
+        }
+        
+        .status-failed {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
+        }
+        
+        .loading-spinner {
+            border: 4px solid rgba(0, 76, 155, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .status-message {
+            text-align: center;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+        
+        .status-error {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
+            border-left: 4px solid var(--danger);
+        }
+        
+        @media (max-width: 768px) {
+            .logs-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .logs-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="dashboard-header">
+        <div class="header-logo">
+            <a href="/index.html"><img src="/images/GOCLogo.png" alt="Government of Canada Logo"></a>
+        </div>
+        <nav class="dashboard-nav">
+            <ul>
+                <li><a href="/overview.html">Home</a></li>
+                <li><a href="/reviewReportedPhishingEmails.html">Reports</a></li>
+                <li class="active"><a href="/reviewlogs.html">Logs</a></li>
+                <li><a href="/phishingPreventionEmployeeTraining.html">Training</a></li>
+                <li><a href="/generateReports.html">Export</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        <div class="logs-container">
+            <div class="logs-header">
+                <h1 class="logs-title">Security Event Logs</h1>
+                <div class="logs-description">
+                    This system tracks all phishing detection events, employee reports, and system activities.
+                    Use these logs to monitor security events and investigate potential threats.
+                </div>
+            </div>
+            
+            <div id="loading-message">
+                <div class="loading-spinner"></div>
+                <p>Loading security logs...</p>
+            </div>
+            
+            <table class="logs-table" id="logsTable" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Event ID</th>
+                        <th>Timestamp</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="logsTableBody">
+                    <!-- Logs will be populated by JavaScript -->
+                </tbody>
+            </table>
+            
+            <div class="status-message" id="no-logs" style="display: none;">
+                <p>No security events logged in this period</p>
+                <button onclick="loadLogs()" class="btn">Refresh Logs</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="dashboard-footer">
+        <div class="footer-links">
+            <a href="/privacy.html">Privacy Policy</a>
+            <a href="/terms.html">Terms of Use</a>
+        </div>
+        <div class="footer-branding">
+            <img src="/images/CanadaLogo.jpg" alt="Canada Symbol" width="100">
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Load logs when page loads
+            loadLogs();
+            
+            // Set up auto-refresh every 5 minutes
+            setInterval(loadLogs, 300000);
+        });
+        
+        async function loadLogs() {
+            const loadingMsg = document.getElementById('loading-message');
+            const logsTable = document.getElementById('logsTable');
+            const logsBody = document.getElementById('logsTableBody');
+            const noLogsMsg = document.getElementById('no-logs');
+            
+            // Show loading state
+            loadingMsg.style.display = 'block';
+            logsTable.style.display = 'none';
+            noLogsMsg.style.display = 'none';
+            
+            try {
+                const response = await fetch('https://testrepofinal.onrender.com/logs');
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const logs = await response.json();
+                displayLogs(logs);
+            } catch (error) {
+                console.error('Failed to load logs:', error);
+                loadingMsg.innerHTML = `
+                    <p style="color: var(--danger);">Error loading logs. Please try again.</p>
+                    <button onclick="loadLogs()" class="btn">Retry</button>
+                `;
+            }
+        }
+        
+        function displayLogs(logs) {
+            const loadingMsg = document.getElementById('loading-message');
+            const logsTable = document.getElementById('logsTable');
+            const logsBody = document.getElementById('logsTableBody');
+            const noLogsMsg = document.getElementById('no-logs');
+            
+            // Hide loading message
+            loadingMsg.style.display = 'none';
+            
+            // Clear existing rows
+            logsBody.innerHTML = '';
+            
+            if (!logs || logs.length === 0) {
+                noLogsMsg.style.display = 'block';
+                return;
+            }
+            
+            // Add log rows
+            logs.forEach(log => {
+                const row = document.createElement('tr');
+                
+                // Format timestamp if available
+                const timestamp = log.timestamp ? formatDateTime(log.timestamp) : 'N/A';
+                
+                row.innerHTML = `
+                    <td>${log.id || 'N/A'}</td>
+                    <td>${timestamp}</td>
+                    <td>${log.description || 'No description available'}</td>
+                    <td><span class="status status-${log.status ? log.status.toLowerCase() : 'pending'}">
+                        ${log.status || 'Pending'}
+                    </span></td>
+                `;
+                logsBody.appendChild(row);
+            });
+            
+            // Show table
+            logsTable.style.display = 'table';
+        }
+        
+        function formatDateTime(dateString) {
+            if (!dateString) return 'N/A';
+            
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-CA', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch (e) {
+                console.error('Error formatting date:', e);
+                return dateString;
+            }
+        }
+    </script>
+</body>
+</html>

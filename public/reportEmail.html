@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Phishing Emails | Security Dashboard</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        :root {
+            --primary: #004c9b;
+            --primary-dark: #003366;
+            --danger: #dc3545;
+            --danger-dark: #c82333;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+        
+        .report-container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--light-gray);
+        }
+        
+        .report-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .report-title {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .phishing-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+        }
+        
+        .phishing-table th {
+            background: var(--primary);
+            color: white;
+            padding: 1rem;
+            text-align: left;
+        }
+        
+        .phishing-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--light-gray);
+            vertical-align: middle;
+        }
+        
+        .phishing-table tr:hover {
+            background: rgba(0, 76, 155, 0.03);
+        }
+        
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: var(--danger-dark);
+        }
+        
+        .loading-spinner {
+            border: 4px solid rgba(0, 76, 155, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .status-message {
+            text-align: center;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+        
+        .status-error {
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
+            border-left: 4px solid var(--danger);
+        }
+        
+        .email-preview {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        @media (max-width: 768px) {
+            .phishing-table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            .report-container {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="dashboard-header">
+        <div class="header-logo">
+            <a href="/index.html"><img src="/images/GOCLogo.png" alt="Government of Canada Logo"></a>
+        </div>
+        <nav class="dashboard-nav">
+            <ul>
+                <li><a href="/overview.html">Home</a></li>
+                <li class="active"><a href="/reviewReportedPhishingEmails.html">Reports</a></li>
+                <li><a href="/reviewlogs.html">Logs</a></li>
+                <li><a href="/phishingPreventionEmployeeTraining.html">Training</a></li>
+                <li><a href="/generateReports.html">Export</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        <div class="report-container">
+            <div class="report-header">
+                <h1 class="report-title">Report Phishing Emails</h1>
+                <p>Review and report suspicious emails detected by the system</p>
+            </div>
+            
+            <div class="status-message" id="loading-message">
+                <div class="loading-spinner"></div>
+                <p>Loading email reports...</p>
+            </div>
+            
+            <table class="phishing-table" id="email-table" style="display: none;">
+                <thead>
+                    <tr>
+                        <th>Sender</th>
+                        <th>Subject</th>
+                        <th>Received</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="email-table-body">
+                    <!-- Email rows will be populated by JavaScript -->
+                </tbody>
+            </table>
+            
+            <div class="status-message" id="no-emails" style="display: none;">
+                <p>No suspicious emails found in your inbox</p>
+                <button onclick="location.reload()" class="btn">Refresh</button>
+            </div>
+        </div>
+    </main>
+
+    <footer class="dashboard-footer">
+        <div class="footer-links">
+            <a href="/privacy.html">Privacy Policy</a>
+            <a href="/terms.html">Terms of Use</a>
+        </div>
+        <div class="footer-branding">
+            <img src="/images/CanadaLogo.jpg" alt="Canada Symbol" width="100">
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM elements
+            const emailTable = document.getElementById('email-table');
+            const tableBody = document.getElementById('email-table-body');
+            const loadingMsg = document.getElementById('loading-message');
+            const noEmailsMsg = document.getElementById('no-emails');
+            
+            // Fetch emails from API
+            fetchEmails();
+            
+            async function fetchEmails() {
+                try {
+                    const response = await fetch('https://testrepofinal.onrender.com/phishing-emails');
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const emails = await response.json();
+                    displayEmails(emails);
+                } catch (error) {
+                    console.error('Failed to fetch emails:', error);
+                    loadingMsg.innerHTML = `
+                        <p style="color: var(--danger);">Error loading emails. Please try again.</p>
+                        <button onclick="fetchEmails()" class="btn">Retry</button>
+                    `;
+                }
+            }
+            
+            function displayEmails(emails) {
+                loadingMsg.style.display = 'none';
+                
+                if (!emails || emails.length === 0) {
+                    noEmailsMsg.style.display = 'block';
+                    return;
+                }
+                
+                // Clear existing rows
+                tableBody.innerHTML = '';
+                
+                // Add email rows
+                emails.forEach(email => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td class="email-preview" title="${email.sender || 'Unknown sender'}">
+                            ${email.sender || 'Unknown sender'}
+                        </td>
+                        <td class="email-preview" title="${email.subject || 'No subject'}">
+                            ${email.subject || 'No subject'}
+                        </td>
+                        <td>
+                            ${formatDate(email.received) || 'Unknown date'}
+                        </td>
+                        <td>
+                            <button class="btn btn-danger report-btn" 
+                                    data-email-id="${email.id || ''}">
+                                Report
+                            </button>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                });
+                
+                // Initialize report buttons
+                document.querySelectorAll('.report-btn').forEach(btn => {
+                    btn.addEventListener('click', reportEmail);
+                });
+                
+                // Show table
+                emailTable.style.display = 'table';
+            }
+            
+            async function reportEmail(event) {
+                const button = event.target;
+                const row = button.closest('tr');
+                const emailId = button.getAttribute('data-email-id');
+                
+                if (!confirm('Are you sure you want to report this email as phishing?')) {
+                    return;
+                }
+                
+                button.disabled = true;
+                button.textContent = 'Reporting...';
+                
+                try {
+                    const response = await fetch('https://testrepofinal.onrender.com/report-email', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            id: emailId,
+                            sender: row.cells[0].textContent,
+                            subject: row.cells[1].textContent,
+                            received: row.cells[2].textContent
+                        })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error('Reporting failed');
+                    }
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        // Remove the row
+                        row.remove();
+                        
+                        // Show message if no emails left
+                        if (tableBody.rows.length === 0) {
+                            emailTable.style.display = 'none';
+                            noEmailsMsg.style.display = 'block';
+                        }
+                        
+                        // Show success notification
+                        showNotification('Email reported successfully!', 'success');
+                    } else {
+                        throw new Error(result.error || 'Unknown error');
+                    }
+                } catch (error) {
+                    console.error('Reporting error:', error);
+                    showNotification('Failed to report email: ' + error.message, 'error');
+                    button.disabled = false;
+                    button.textContent = 'Report';
+                }
+            }
+            
+            function formatDate(dateString) {
+                if (!dateString) return '';
+                const date = new Date(dateString);
+                return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+            }
+            
+            function showNotification(message, type) {
+                const notification = document.createElement('div');
+                notification.className = `status-message status-${type}`;
+                notification.textContent = message;
+                notification.style.position = 'fixed';
+                notification.style.bottom = '20px';
+                notification.style.right = '20px';
+                notification.style.zIndex = '1000';
+                notification.style.padding = '1rem 2rem';
+                notification.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.style.opacity = '0';
+                    notification.style.transition = 'opacity 0.5s ease';
+                    setTimeout(() => notification.remove(), 500);
+                }, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

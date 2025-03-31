@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Training | Phishing Prevention</title>
+    <link rel="stylesheet" href="/css/main.css"> <!-- Consolidated CSS -->
+    <style>
+        /* Training Module Styles */
+        :root {
+            --primary: #004c9b;
+            --primary-dark: #003366;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+        
+        .resource-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+            border: 1px solid var(--light-gray);
+        }
+        
+        .resource-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: var(--primary);
+        }
+        
+        .resource-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .resource-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        
+        .resource-category {
+            background-color: rgba(0, 76, 155, 0.1);
+            color: var(--primary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.8rem;
+        }
+        
+        .resource-preview {
+            margin-top: 1rem;
+            border-top: 1px solid var(--light-gray);
+            padding-top: 1rem;
+        }
+        
+        .resource-link {
+            display: inline-flex;
+            align-items: center;
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            margin-top: 0.75rem;
+        }
+        
+        .resource-link:hover {
+            text-decoration: underline;
+        }
+        
+        .resource-link::after {
+            content: "→";
+            margin-left: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .resource-link:hover::after {
+            transform: translateX(3px);
+        }
+        
+        .resource-date {
+            color: var(--gray);
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+        }
+        
+        #quiz-button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            display: block;
+            margin: 2rem auto;
+            width: fit-content;
+        }
+        
+        #quiz-button:hover {
+            background: var(--primary-dark);
+        }
+        
+        #resources-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        #loading-message {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .loading-spinner {
+            border: 4px solid rgba(0, 76, 155, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            #resources-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .resource-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="dashboard-header">
+        <div class="header-logo">
+            <a href="/index.html"><img src="/images/GOCLogo.png" alt="Government of Canada Logo"></a>
+        </div>
+        <nav class="dashboard-nav">
+            <ul>
+                <li><a href="/overview.html">Home</a></li>
+                <li><a href="/reviewReportedPhishingEmails.html">Reports</a></li>
+                <li><a href="/reviewlogs.html">Logs</a></li>
+                <li class="active"><a href="/phishingPreventionEmployeeTraining.html">Training</a></li>
+                <li><a href="/generateReports.html">Export</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        <div class="module-header">
+            <h1>Phishing Prevention Training</h1>
+            <p>Educational resources to help identify and report phishing attempts</p>
+        </div>
+
+        <div class="metrics-bar">
+            <div class="metric">
+                <div class="metric-value" id="training-completed">0</div>
+                <div class="metric-label">Courses Completed</div>
+            </div>
+            <div class="metric">
+                <div class="metric-value" id="quiz-score">0%</div>
+                <div class="metric-label">Average Score</div>
+            </div>
+        </div>
+
+        <div id="loading-message">
+            <div class="loading-spinner"></div>
+            <p>Loading training resources...</p>
+        </div>
+
+        <div id="resources-container" style="display: none;">
+            <!-- Dynamic content will load here -->
+        </div>
+
+        <div id="no-resources" style="display: none; text-align: center; padding: 2rem;">
+            <p>No training resources currently available</p>
+            <button onclick="location.reload()">Refresh</button>
+        </div>
+
+        <a href="/quiz.html">
+            <button id="quiz-button">Take the Quiz →</button>
+        </a>
+    </main>
+
+    <footer class="dashboard-footer">
+        <div class="footer-links">
+            <a href="/privacy.html">Privacy Policy</a>
+            <a href="/terms.html">Terms of Use</a>
+        </div>
+        <div class="footer-branding">
+            <img src="/images/CanadaLogo.jpg" alt="Canada Symbol" width="100">
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate metrics
+            animateValue('training-completed', 0, 142, 1500);
+            animateValue('quiz-score', 0, 87, 1500, '%');
+            
+            // Load resources
+            fetchResources();
+            
+            // Card animation
+            animateCards();
+        });
+
+        function animateValue(id, start, end, duration, suffix = '') {
+            const element = document.getElementById(id);
+            let startTime = null;
+            
+            const animation = (timestamp) => {
+                if (!startTime) startTime = timestamp;
+                const progress = Math.min((timestamp - startTime) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                element.textContent = value + suffix;
+                if (progress < 1) {
+                    requestAnimationFrame(animation);
+                }
+            };
+            
+            requestAnimationFrame(animation);
+        }
+
+        async function fetchResources() {
+            try {
+                const response = await fetch('https://testrepofinal.onrender.com/resources');
+                if (!response.ok) throw new Error('Network error');
+                
+                const resources = await response.json();
+                displayResources(resources);
+            } catch (error) {
+                console.error('Fetch error:', error);
+                document.getElementById('loading-message').innerHTML = `
+                    <p style="color: #dc3545;">Error loading resources. Please try again.</p>
+                    <button onclick="fetchResources()">Retry</button>
+                `;
+            }
+        }
+
+        function displayResources(resources) {
+            const container = document.getElementById('resources-container');
+            const loading = document.getElementById('loading-message');
+            const empty = document.getElementById('no-resources');
+            
+            loading.style.display = 'none';
+            
+            if (!resources || resources.length === 0) {
+                empty.style.display = 'block';
+                return;
+            }
+            
+            container.innerHTML = resources.map(resource => `
+                <div class="resource-card">
+                    <div class="resource-header">
+                        <h3 class="resource-title">${resource.resource_name}</h3>
+                        <span class="resource-category">${resource.category}</span>
+                    </div>
+                    <p class="resource-date">Added: ${new Date(resource.published).toLocaleDateString()}</p>
+                    <div class="resource-preview">
+                        ${getPreview(resource)}
+                        <a href="${resource.website_link}" target="_blank" class="resource-link">View Resource</a>
+                    </div>
+                </div>
+            `).join('');
+            
+            container.style.display = 'grid';
+        }
+
+        function getPreview(resource) {
+            const url = resource.website_link.toLowerCase();
+            
+            if (url.endsWith('.mp4')) {
+                return `
+                    <video controls style="width:100%; border-radius:4px;">
+                        <source src="${resource.website_link}" type="video/mp4">
+                    </video>
+                `;
+            } else if (url.match(/\.(png|jpg|jpeg|gif)$/)) {
+                return `
+                    <img src="${resource.website_link}" alt="${resource.resource_name}" 
+                         style="width:100%; max-height:200px; object-fit:contain; border-radius:4px;">
+                `;
+            } else if (url.endsWith('.pdf')) {
+                return `
+                    <embed src="${resource.website_link}" 
+                           type="application/pdf" 
+                           style="width:100%; height:200px; border-radius:4px;">
+                `;
+            }
+            
+            return `
+                <p style="color:var(--gray);">${resource.description || 'Interactive training resource'}</p>
+            `;
+        }
+
+        function animateCards() {
+            const cards = document.querySelectorAll('.resource-card');
+            cards.forEach((card, i) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = `all 0.5s ease ${i * 0.1}s`;
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100);
+            });
+        }
+    </script>
+</body>
+</html>

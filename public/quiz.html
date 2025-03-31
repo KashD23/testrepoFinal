@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phishing Awareness Quiz | Security Dashboard</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        :root {
+            --primary: #004c9b;
+            --primary-dark: #003366;
+            --success: #28a745;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+        
+        .quiz-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--light-gray);
+        }
+        
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .quiz-title {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .progress-container {
+            margin: 2rem 0;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: var(--light-gray);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+        
+        .progress-text {
+            text-align: right;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .question {
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--light-gray);
+            transition: all 0.3s ease;
+        }
+        
+        .question.active {
+            border-color: var(--primary);
+        }
+        
+        .question h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .options {
+            display: grid;
+            gap: 0.75rem;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            background: var(--light);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .option:hover {
+            background: #e0e7ff;
+        }
+        
+        .option input {
+            margin-right: 1rem;
+            cursor: pointer;
+        }
+        
+        .result {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 6px;
+            display: none;
+            font-weight: 600;
+        }
+        
+        .correct {
+            background-color: rgba(40, 167, 69, 0.1);
+            color: var(--success);
+            border-left: 4px solid var(--success);
+        }
+        
+        .incorrect {
+            background-color: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
+            border-left: 4px solid var(--danger);
+        }
+        
+        .feedback {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            background: rgba(0, 76, 155, 0.05);
+            color: var(--primary);
+            border-radius: 6px;
+            font-style: italic;
+            display: none;
+        }
+        
+        .quiz-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            flex: 1;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            border: none;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            border: 1px solid var(--primary);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--light);
+        }
+        
+        .score-display {
+            text-align: center;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            background: rgba(0, 76, 155, 0.05);
+            border-radius: 8px;
+            font-size: 1.2rem;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .quiz-container {
+                padding: 1rem;
+                margin: 1rem;
+            }
+            
+            .quiz-actions {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="dashboard-header">
+        <div class="header-logo">
+            <a href="/index.html"><img src="/images/GOCLogo.png" alt="Government of Canada Logo"></a>
+        </div>
+        <nav class="dashboard-nav">
+            <ul>
+                <li><a href="/overview.html">Home</a></li>
+                <li><a href="/reviewReportedPhishingEmails.html">Reports</a></li>
+                <li><a href="/reviewlogs.html">Logs</a></li>
+                <li class="active"><a href="/phishingPreventionEmployeeTraining.html">Training</a></li>
+                <li><a href="/generateReports.html">Export</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        <div class="quiz-container">
+            <div class="quiz-header">
+                <h1 class="quiz-title">Phishing Awareness Quiz</h1>
+                <p>Test your knowledge of phishing threats and prevention</p>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress" id="quiz-progress"></div>
+                </div>
+                <div class="progress-text" id="progress-text">0 of 10 questions answered</div>
+            </div>
+            
+            <!-- Question 1 -->
+            <div class="question" id="question1">
+                <h3>1. What is phishing?</h3>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q1" value="A"> A type of fish
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q1" value="B"> A cyber attack to steal sensitive information
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q1" value="C"> A type of email service
+                    </label>
+                </div>
+                <div class="result" id="result1"></div>
+                <div class="feedback" id="feedback1"></div>
+            </div>
+            
+            <!-- Question 2 -->
+            <div class="question" id="question2">
+                <h3>2. Which of the following is a common sign of a phishing email?</h3>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q2" value="A"> Poor grammar and spelling
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q2" value="B"> A legitimate sender email address
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q2" value="C"> A clear and professional tone
+                    </label>
+                </div>
+                <div class="result" id="result2"></div>
+                <div class="feedback" id="feedback2"></div>
+            </div>
+            
+            <!-- Questions 3-10 would follow the same pattern -->
+            
+            <div class="score-display" id="score-display"></div>
+            
+            <div class="quiz-actions">
+                <button id="submit-btn" class="btn btn-primary">Submit Quiz</button>
+                <a href="/phishingPreventionEmployeeTraining.html" class="btn btn-secondary">Back to Training</a>
+            </div>
+        </div>
+    </main>
+
+    <footer class="dashboard-footer">
+        <div class="footer-links">
+            <a href="/privacy.html">Privacy Policy</a>
+            <a href="/terms.html">Terms of Use</a>
+        </div>
+        <div class="footer-branding">
+            <img src="/images/CanadaLogo.jpg" alt="Canada Symbol" width="100">
+        </div>
+    </footer>
+
+    <script>
+        // Quiz data with answers and explanations
+        const quizData = {
+            q1: {
+                answer: "B",
+                explanation: "Phishing is a cyber attack where attackers try to steal sensitive information by pretending to be a trustworthy entity."
+            },
+            q2: {
+                answer: "A",
+                explanation: "Phishing emails often contain poor grammar and spelling mistakes as they're frequently sent by non-native speakers."
+            }
+            // Additional questions would follow the same pattern
+        };
+
+        // Quiz state management
+        let quizState = {
+            answered: 0,
+            totalQuestions: 10,
+            score: 0,
+            submitted: false
+        };
+
+        // DOM elements
+        const progressBar = document.getElementById('quiz-progress');
+        const progressText = document.getElementById('progress-text');
+        const submitBtn = document.getElementById('submit-btn');
+        const scoreDisplay = document.getElementById('score-display');
+
+        // Initialize event listeners
+        function initQuiz() {
+            // Radio button change events
+            document.querySelectorAll('input[type="radio"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const questionId = this.name;
+                    const questionDiv = document.getElementById(`question${questionId.substring(1)}`);
+                    
+                    // Mark question as active
+                    questionDiv.classList.add('active');
+                    
+                    // Update progress if this is a new answer
+                    if (!this.dataset.answered) {
+                        quizState.answered++;
+                        updateProgress();
+                        this.dataset.answered = true;
+                    }
+                });
+            });
+            
+            // Submit button event
+            submitBtn.addEventListener('click', submitQuiz);
+            
+            // Initialize progress
+            updateProgress();
+        }
+
+        // Update progress bar and text
+        function updateProgress() {
+            const percentage = (quizState.answered / quizState.totalQuestions) * 100;
+            progressBar.style.width = `${percentage}%`;
+            progressText.textContent = `${quizState.answered} of ${quizState.totalQuestions} questions answered`;
+        }
+
+        // Submit quiz and calculate score
+        function submitQuiz() {
+            if (quizState.answered < quizState.totalQuestions) {
+                alert(`Please answer all questions before submitting. (${quizState.totalQuestions - quizState.answered} remaining)`);
+                return;
+            }
+            
+            if (quizState.submitted) return;
+            quizState.submitted = true;
+            
+            // Calculate score
+            quizState.score = 0;
+            for (const [question, data] of Object.entries(quizData)) {
+                const selected = document.querySelector(`input[name="${question}"]:checked`);
+                const resultDiv = document.getElementById(`result${question.substring(1)}`);
+                const feedbackDiv = document.getElementById(`feedback${question.substring(1)}`);
+                
+                if (selected && selected.value === data.answer) {
+                    quizState.score++;
+                    resultDiv.textContent = "Correct!";
+                    resultDiv.className = "result correct";
+                } else {
+                    resultDiv.textContent = "Incorrect!";
+                    resultDiv.className = "result incorrect";
+                }
+                
+                feedbackDiv.textContent = data.explanation;
+                resultDiv.style.display = "block";
+                feedbackDiv.style.display = "block";
+            }
+            
+            // Display score
+            const percentage = Math.round((quizState.score / quizState.totalQuestions) * 100);
+            let message = `You scored ${quizState.score} out of ${quizState.totalQuestions} (${percentage}%)`;
+            
+            if (percentage >= 80) {
+                message += " - Excellent! You have strong phishing awareness.";
+            } else if (percentage >= 60) {
+                message += " - Good, but there's room for improvement.";
+            } else {
+                message += " - Consider reviewing the training materials.";
+            }
+            
+            scoreDisplay.textContent = message;
+            scoreDisplay.style.display = "block";
+            submitBtn.disabled = true;
+            
+            // Scroll to results
+            scoreDisplay.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Initialize the quiz
+        document.addEventListener('DOMContentLoaded', initQuiz);
+    </script>
+</body>
+</html>

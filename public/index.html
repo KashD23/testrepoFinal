@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Portal | Phishing Prevention</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --primary-dark: #3a56d4;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+        
+        .hero {
+            background: linear-gradient(135deg, #f5f7ff 0%, #e8ecff 100%);
+            border-radius: 16px;
+            padding: 4rem 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto 2rem;
+        }
+        
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.75rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            margin: 0.5rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(67, 97, 238, 0.3);
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .feature-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title {
+            font-size: 1.25rem;
+            color: var(--dark);
+            margin-bottom: 1rem;
+        }
+        
+        .feature-desc {
+            color: var(--gray);
+            margin-bottom: 1.5rem;
+        }
+        
+        .feature-link {
+            color: var(--primary);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .feature-link:hover {
+            text-decoration: underline;
+        }
+        
+        .feature-link::after {
+            content: "→";
+            margin-left: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-link:hover::after {
+            transform: translateX(3px);
+        }
+        
+        @media (max-width: 768px) {
+            .hero {
+                padding: 3rem 1rem;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="hero">
+            <h1 class="hero-title">Phishing Prevention Portal</h1>
+            <p class="hero-subtitle">
+                Our security platform helps identify, report, and prevent phishing attempts across
+                your organization with advanced detection and employee awareness tools.
+            </p>
+            <a href="/signin.html" class="btn btn-primary">Sign In to Security Portal</a>
+        </div>
+        
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">📧</div>
+                <h3 class="feature-title">Report Suspicious Emails</h3>
+                <p class="feature-desc">
+                    Quickly flag and report potential phishing attempts with our streamlined reporting system.
+                </p>
+                <a href="/reviewReportedPhishingEmails.html" class="feature-link">View Reports</a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Security Analytics</h3>
+                <p class="feature-desc">
+                    Generate detailed reports on threat detection rates and employee response metrics.
+                </p>
+                <a href="/generateReports.html" class="feature-link">View Analytics</a>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🎓</div>
+                <h3 class="feature-title">Training Resources</h3>
+                <p class="feature-desc">
+                    Access our library of training materials to improve your team's phishing awareness.
+                </p>
+                <a href="/phishingPreventionEmployeeTraining.html" class="feature-link">Start Learning</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add any interactive functionality here
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animation for feature cards
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 100);
+            });
+        });
+    </script>
+</body>
+</html>
