@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz - Phishing Prevention System</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css"> <!-- Updated path -->
     <style>
         /* Quiz-specific styles */
         .quiz-container {
@@ -17,65 +17,109 @@
         }
         .question {
             margin-bottom: 20px;
+            padding: 15px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
         .question h3 {
             margin-bottom: 10px;
+            color: #004c9b;
         }
         .options label {
             display: block;
-            margin: 5px 0;
+            margin: 8px 0;
+            padding: 8px 12px;
+            background-color: #f0f0f0;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            cursor: pointer;
+        }
+        .options label:hover {
+            background-color: #e0e0e0;
+        }
+        .options input[type="radio"] {
+            margin-right: 10px;
         }
         .result {
             margin-top: 10px;
             padding: 10px;
             border-radius: 5px;
-            display: none; /* Hidden by default */
+            display: none;
+            font-weight: bold;
         }
         .result.correct {
             background-color: #d4edda;
             color: #155724;
+            border-left: 4px solid #28a745;
         }
         .result.incorrect {
             background-color: #f8d7da;
             color: #721c24;
+            border-left: 4px solid #dc3545;
         }
         .feedback {
             margin-top: 10px;
+            padding: 10px;
             font-style: italic;
             color: #004c9b;
+            background-color: #e7f1ff;
+            border-radius: 4px;
+            display: none;
         }
         .submit-button, .home-button {
             display: block;
             width: 100%;
-            padding: 10px;
+            padding: 12px;
             background-color: #004c9b;
             color: white;
             border: none;
             border-radius: 5px;
             font-size: 16px;
             cursor: pointer;
-            margin-top: 10px;
+            margin-top: 20px;
             text-align: center;
             text-decoration: none;
+            transition: background-color 0.3s;
         }
         .submit-button:hover, .home-button:hover {
             background-color: #003366;
+        }
+        .score-display {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #004c9b;
+        }
+        .progress-bar {
+            height: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .progress {
+            height: 100%;
+            background-color: #004c9b;
+            width: 0%;
+            transition: width 0.5s;
         }
     </style>
 </head>
 <body>
     <header class="company-header">
         <div class="logo">
-            <a href="index.html"><img src="Images/GOCLogo.png" alt="GOC Logo"></a>
+            <a href="/index.html"><img src="/Images/GOCLogo.png" alt="GOC Logo"></a> <!-- Updated path -->
         </div>
         <div class="company-name">
             <nav class="nav-bar">
                 <ul>
-                    <li><a href="overview.html">Home</a></li>
-                    <li><a href="reviewReportedPhishingEmails.html">Reports</a></li>
-                    <li><a href="reviewlogs.html">Logs</a></li>
-                    <li><a href="phishingPreventionEmployeeTraining.html">Training</a></li>
-                    <li><a href="generateReports.html">Export Reports</a></li>
+                    <li><a href="/overview.html">Home</a></li> <!-- Updated path -->
+                    <li><a href="/reviewReportedPhishingEmails.html">Reports</a></li> <!-- Updated path -->
+                    <li><a href="/reviewlogs.html">Logs</a></li> <!-- Updated path -->
+                    <li><a href="/phishingPreventionEmployeeTraining.html">Training</a></li> <!-- Updated path -->
+                    <li><a href="/generateReports.html">Export Reports</a></li> <!-- Updated path -->
                 </ul>
             </nav>
         </div>
@@ -85,6 +129,11 @@
         <div class="rectangle">
             <div class="pps"><h1>Phishing Prevention System (PPS)</h1></div>
             <h2>Email Phishing Awareness Quiz</h2>
+
+            <!-- Progress Bar -->
+            <div class="progress-bar">
+                <div class="progress" id="quiz-progress"></div>
+            </div>
 
             <!-- Quiz Container -->
             <div class="quiz-container">
@@ -268,11 +317,14 @@
                     <div class="feedback" id="feedback10"></div>
                 </div>
 
+                <!-- Score Display -->
+                <div class="score-display" id="score-display"></div>
+
                 <!-- Submit Button -->
-                <button class="submit-button" onclick="submitQuiz()">Submit Quiz</button>
+                <button class="submit-button" id="submit-button">Submit Quiz</button>
 
                 <!-- Back to Homepage Button -->
-                <a href="overview.html" class="home-button">Back to Homepage</a>
+                <a href="/overview.html" class="home-button">Back to Homepage</a> <!-- Updated path -->
             </div>
         </div>
     </main>
@@ -283,7 +335,7 @@
             <a href="#">Terms and Conditions</a> | <a href="#">Privacy</a>
         </div>
         <div class="footer-logo">
-            <a href="index.html"><img src="Images/CanadaLogo.jpg" alt="Canada Logo"></a>
+            <a href="/index.html"><img src="/Images/CanadaLogo.jpg" alt="Canada Logo"></a> <!-- Updated path -->
         </div>
     </footer>
 
@@ -302,12 +354,38 @@
             q10: { answer: "B", explanation: "Using strong, unique passwords and enabling two-factor authentication are the best ways to protect yourself from phishing attacks." },
         };
 
+        // Track answered questions
+        let answeredQuestions = 0;
+        const totalQuestions = 10;
+
+        // Update progress bar
+        function updateProgress() {
+            const progress = (answeredQuestions / totalQuestions) * 100;
+            document.getElementById('quiz-progress').style.width = `${progress}%`;
+        }
+
+        // Add event listeners to radio buttons
+        document.querySelectorAll('input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                const questionNumber = this.name.substring(1);
+                const questionDiv = document.querySelector(`.question:nth-child(${questionNumber})`);
+                
+                // Check if this is the first time answering this question
+                if (!questionDiv.classList.contains('answered')) {
+                    questionDiv.classList.add('answered');
+                    answeredQuestions++;
+                    updateProgress();
+                }
+            });
+        });
+
         // Function to submit the quiz
         function submitQuiz() {
             let score = 0;
+            let allAnswered = true;
 
             // Check each question
-            for (let i = 1; i <= 10; i++) {
+            for (let i = 1; i <= totalQuestions; i++) {
                 const questionName = `q${i}`;
                 const selectedAnswer = document.querySelector(`input[name="${questionName}"]:checked`);
                 const resultDiv = document.getElementById(`result${i}`);
@@ -315,28 +393,54 @@
 
                 if (selectedAnswer) {
                     if (selectedAnswer.value === quizData[questionName].answer) {
-                        resultDiv.textContent = "Correct!";
+                        resultDiv.textContent = "✓ Correct!";
                         resultDiv.className = "result correct";
-                        feedbackDiv.textContent = ""; // Clear feedback for correct answers
+                        feedbackDiv.textContent = quizData[questionName].explanation;
                         score++;
                     } else {
-                        resultDiv.textContent = "Incorrect!";
+                        resultDiv.textContent = "✗ Incorrect!";
                         resultDiv.className = "result incorrect";
-                        feedbackDiv.textContent = `Correct Answer: ${quizData[questionName].answer}. Explanation: ${quizData[questionName].explanation}`;
+                        feedbackDiv.textContent = `Correct Answer: ${quizData[questionName].answer}. ${quizData[questionName].explanation}`;
                     }
                     resultDiv.style.display = "block";
                     feedbackDiv.style.display = "block";
                 } else {
+                    allAnswered = false;
+                    const resultDiv = document.getElementById(`result${i}`);
                     resultDiv.textContent = "Please select an answer.";
                     resultDiv.className = "result incorrect";
                     resultDiv.style.display = "block";
-                    feedbackDiv.style.display = "none";
                 }
             }
 
             // Show overall score
-            alert(`You scored ${score} out of 10!`);
+            if (allAnswered) {
+                const scorePercentage = Math.round((score / totalQuestions) * 100);
+                let message = `You scored ${score} out of ${totalQuestions} (${scorePercentage}%)! `;
+                
+                if (scorePercentage >= 80) {
+                    message += "Excellent! You have strong phishing awareness.";
+                } else if (scorePercentage >= 60) {
+                    message += "Good, but there's room for improvement.";
+                } else {
+                    message += "Consider reviewing the training materials to improve your phishing awareness.";
+                }
+                
+                document.getElementById('score-display').textContent = message;
+                document.getElementById('submit-button').disabled = true;
+                
+                // Scroll to score display
+                document.getElementById('score-display').scrollIntoView({ behavior: 'smooth' });
+            } else {
+                alert("Please answer all questions before submitting.");
+            }
         }
+
+        // Initialize progress bar
+        updateProgress();
+        
+        // Add click event to submit button
+        document.getElementById('submit-button').addEventListener('click', submitQuiz);
     </script>
 </body>
 </html>

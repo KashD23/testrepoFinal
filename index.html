@@ -4,52 +4,146 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Department of Phishing Prevention</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css"> <!-- Updated path -->
+    <style>
+        /* Homepage-specific styles */
+        .welcome-container {
+            text-align: center;
+            padding: 30px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .welcome-container h2 {
+            color: #004c9b;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+        
+        .welcome-container p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .signin-button {
+            display: inline-block;
+            background-color: #004c9b;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1em;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background-color 0.3s;
+            margin-bottom: 30px;
+        }
+        
+        .signin-button:hover {
+            background-color: #003366;
+        }
+        
+        .quick-links {
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .quick-links h2 {
+            color: #004c9b;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .quick-links ul {
+            list-style-type: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .quick-links li {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+        
+        .quick-links li:hover {
+            transform: translateY(-3px);
+        }
+        
+        .quick-links a {
+            color: #004c9b;
+            text-decoration: none;
+            font-weight: bold;
+            display: block;
+        }
+        
+        .quick-links a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 768px) {
+            .welcome-container h2 {
+                font-size: 1.5em;
+            }
+            
+            .quick-links ul {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
     <header class="company-header">
         <div class="logo">
-            <a href="index.html"><img src="Images/GOCLogo.png" alt="GOCLogo"></a>
+            <a href="/index.html"><img src="/Images/GOCLogo.png" alt="Government of Canada Logo"></a> <!-- Updated path -->
         </div>
         <div class="company-name">
             Department of Phishing Prevention
-            <br>
         </div>
     </header>
 
     <main>
         <div class="rectangle">
-            <div class="pps"><h2>Department of Phishing Prevention</h2></div>
-            <br>
-            <!-- Updated Sign In Button -->
-            <a href="signin.html">
-                <input type="submit" id="submit" value="Sign In">
-            </a>
-            <p>Administers tax, benefits, and related programs 
-                for the Government of Canada and for most provinces 
-                and territories.
-            </p>
-
-            <h2>Most Requested</h2>
-
-            <ul>
-                <a href="reviewReportedPhishingEmails.html"><li>Phishing Prevention System (PPS)</li></a>
-                <li>Payroll deductions calculator</li>
-                <li>GST/HST NETFILE</li>
-                <li>Benefits payment dates</li>
-                <li>GST/HST break</li>
-                <li>Forms and publications</li>
-            </ul>
+            <div class="welcome-container">
+                <h2>Welcome to the Phishing Prevention System</h2>
+                <p>
+                    The Department of Phishing Prevention works to protect Government of Canada systems
+                    and employees from malicious email threats. Our system helps identify, report, and
+                    prevent phishing attempts across all departments.
+                </p>
+                
+                <a href="/signin.html" class="signin-button">Sign In to Your Account</a>
+                
+                <div class="quick-links">
+                    <h2>Quick Links</h2>
+                    <ul>
+                        <a href="/reviewReportedPhishingEmails.html"><li>Phishing Prevention System (PPS)</li></a> <!-- Updated path -->
+                        <a href="/phishingPreventionEmployeeTraining.html"><li>Employee Training Resources</li></a> <!-- Updated path -->
+                        <a href="/generateReports.html"><li>Generate Security Reports</li></a> <!-- Updated path -->
+                        <a href="#"><li>Phishing Awareness Guidelines</li></a>
+                        <a href="#"><li>Reporting Procedures</li></a>
+                        <a href="#"><li>Security Best Practices</li></a>
+                    </ul>
+                </div>
+            </div>
         </div>
     </main>
 
     <footer>
-        <div class="pps"></div>
         <div class="footer-links">
-            <a href="#">Terms and Conditions</a> | <a href="#">Privacy</a>
+            <a href="#">Terms and Conditions</a> | 
+            <a href="#">Privacy Policy</a> | 
+            <a href="#">Accessibility</a>
         </div>
         <div class="footer-logo">
-            <a href="index.html"><img src="Images/CanadaLogo.jpg" alt="Canada Logo"></a>
+            <a href="/index.html"><img src="/Images/CanadaLogo.jpg" alt="Government of Canada Logo"></a> <!-- Updated path -->
         </div>
     </footer>
 </body>

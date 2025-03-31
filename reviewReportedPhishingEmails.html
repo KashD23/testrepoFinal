@@ -4,21 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Reported Phishing Emails</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/style.css"> <!-- Updated path -->
 </head>
 <body>
     <header class="company-header">
         <div class="logo">
-            <a href="index.html"><img src="Images/GOCLogo.png" alt="GOC Logo"></a>
+            <a href="/index.html"><img src="/Images/GOCLogo.png" alt="GOC Logo"></a> <!-- Updated path -->
         </div>
         <div class="company-name">
         <nav class="nav-bar">
             <ul>
-                <li><a href="overview.html">Home</a></li>
-                <li><a href="reviewReportedPhishingEmails.html">Reports</a></li>
-                <li><a href="reviewlogs.html">Logs</a></li>
-                <li><a href="phishingPreventionEmployeeTraining.html">Training</a></li>
-                <li><a href="generateReports.html">Export Reports</a></li>
+                <li><a href="/overview.html">Home</a></li> <!-- Updated path -->
+                <li><a href="/reviewReportedPhishingEmails.html">Reports</a></li> <!-- Updated path -->
+                <li><a href="/reviewlogs.html">Logs</a></li> <!-- Updated path -->
+                <li><a href="/phishingPreventionEmployeeTraining.html">Training</a></li> <!-- Updated path -->
+                <li><a href="/generateReports.html">Export Reports</a></li> <!-- Updated path -->
             </ul>
         </nav>
     </div>
@@ -43,10 +43,7 @@
                         </tr>
                     </tbody>
                 </table>
-            
             </div>
-
-
 
             <table class="phishing-table" id="email-table">
                 <thead>
@@ -69,12 +66,13 @@
             <a href="#">Terms and Conditions</a> | <a href="#">Privacy</a>
         </div>
         <div class="footer-logo">
-            <a href="index.html"><img src="Images/CanadaLogo.jpg" alt="Canada Logo"></a>
+            <a href="/index.html"><img src="/Images/CanadaLogo.jpg" alt="Canada Logo"></a> <!-- Updated path -->
         </div>
     </footer>
 
     <script>
-        fetch('http://localhost:3000/phishing-emails')
+        // Updated fetch URL to use Render domain
+        fetch('https://testrepofinal.onrender.com/phishing-emails')
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -85,20 +83,30 @@
                 console.log("Data received from server:", data);
                 const tableBody = document.querySelector("#email-table tbody");
                 tableBody.innerHTML = '';
+                
+                if (data.length === 0) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="4" style="text-align: center;">
+                                No phishing emails reported yet.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
                 data.forEach(email => {
                     const row = document.createElement("tr");
                     row.innerHTML = `
-                        <td>${email.sender}</td>
-                        <td>${email.subject}</td>
-                        <td>${email.received}</td>
+                        <td>${email.sender || 'N/A'}</td>
+                        <td>${email.subject || 'N/A'}</td>
+                        <td>${email.received || 'N/A'}</td>
                         <td>
                             ${email.image ? `
-                                <a href="${email.image}" target="_blank">
-                                    <img src="${email.image}" alt="Email Image" style="width: 150px; height: auto;">
+                                <a href="/Images/${email.image}" target="_blank">
+                                    <img src="/Images/${email.image}" alt="Email Screenshot" style="max-width: 150px; max-height: 100px;">
                                 </a>
-                                <br>
-                                <a href="${email.image}" target="_blank">View image here</a>
-                            ` : 'No Image'}
+                            ` : 'No Image Available'}
                         </td>
                     `;
                     tableBody.appendChild(row);
@@ -110,11 +118,24 @@
                 tableBody.innerHTML = `
                     <tr>
                         <td colspan="4" style="color: red; text-align: center;">
-                            Failed to load phishing emails. Please try again later.
+                            Error loading phishing emails. Please refresh the page or try again later.
+                            <br><small>${err.message}</small>
                         </td>
                     </tr>
                 `;
             });
+
+        // Add loading indicator while fetching data
+        document.addEventListener("DOMContentLoaded", function() {
+            const tableBody = document.querySelector("#email-table tbody");
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="4" style="text-align: center;">
+                        Loading reported emails...
+                    </td>
+                </tr>
+            `;
+        });
     </script>
 </body>
 </html>

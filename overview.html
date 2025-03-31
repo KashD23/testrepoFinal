@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Overview</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Overview - Phishing Prevention System</title>
+    <link rel="stylesheet" href="/style.css"> <!-- Updated path -->
     <style>
         .overview-container {
             max-width: 1200px;
@@ -17,62 +17,119 @@
 
         .overview-container h1 {
             text-align: center;
-            color: #333;
+            color: #004c9b;
             margin-bottom: 20px;
+            font-size: 2.2em;
         }
 
         .overview-container h2 {
-            color: #555;
+            color: #003366;
             margin-top: 20px;
+            text-align: center;
+            font-size: 1.5em;
+            border-bottom: 2px solid #004c9b;
+            padding-bottom: 10px;
         }
 
         .text-box-container {
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
             margin-top: 30px;
         }
 
         .text-box {
-            flex: 1;
-            padding: 20px;
+            padding: 25px;
             background-color: #fff;
             border: 1px solid #ddd;
             border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .text-box:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .text-box h3 {
             margin-bottom: 15px;
+            color: #004c9b;
+            flex-grow: 1;
         }
 
         .text-box a {
-            color: #007bff;
+            color: #004c9b;
             text-decoration: none;
-            font-size: 18px;
+            font-size: 1.2em;
             font-weight: bold;
+            transition: color 0.3s;
         }
 
         .text-box a:hover {
+            color: #002b5c;
             text-decoration: underline;
+        }
+
+        .text-box p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+
+        .text-box .icon {
+            font-size: 2.5em;
+            color: #004c9b;
+            margin-bottom: 15px;
         }
 
         .footer-links {
             text-align: center;
             margin-top: 30px;
             font-size: 14px;
+            padding: 15px 0;
+            background-color: #f0f0f0;
+            border-radius: 8px;
         }
 
         .footer-links a {
             margin: 0 10px;
+            color: #004c9b;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        .privacy-notice {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #e7f1ff;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .text-box-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .overview-container h1 {
+                font-size: 1.8em;
+            }
         }
     </style>
 </head>
 <body>
     <header class="company-header">
         <div class="logo">
-            <a href="index.html"><img src="Images/GOCLogo.png" alt="GOCLogo"></a>
+            <a href="/index.html"><img src="/Images/GOCLogo.png" alt="GOC Logo"></a> <!-- Updated path -->
         </div>
         <div class="company-name">
             Department of Phishing Prevention
@@ -82,46 +139,50 @@
     <main>
         <div class="overview-container">
             <h1>Department of Phishing Prevention</h1>
-            <h2>Phishing Prevention System</h2>
+            <h2>Phishing Prevention System Dashboard</h2>
 
             <div class="text-box-container">
                 <!-- Review Reported Phishing Emails -->
                 <div class="text-box">
-                    <h3><a href="reviewReportedPhishingEmails.html">Review Reported Phishing Emails</a></h3>
-                    <p>Contains all the flagged emails by the CRA employees. Review each email for further investigation and take appropriate action.</p>
+                    <div class="icon">📧</div>
+                    <h3><a href="/reviewReportedPhishingEmails.html">Review Reported Phishing Emails</a></h3>
+                    <p>Contains all flagged emails reported by CRA employees. Review each email for investigation and take appropriate action against potential phishing attempts.</p>
                 </div>
 
                 <!-- Phishing Detection Logs -->
                 <div class="text-box">
-                    <h3><a href="ReviewLogs.html">Phishing Detection Logs</a></h3>
-                    <p>Includes training programs and numerous phishing prevention simulations to enable the employee to fully manage the system.</p>
+                    <div class="icon">📊</div>
+                    <h3><a href="/reviewlogs.html">Phishing Detection Logs</a></h3> <!-- Fixed path -->
+                    <p>Access comprehensive logs of phishing detection activities, including system alerts and employee-reported incidents for security analysis.</p>
                 </div>
 
                 <!-- Phishing Prevention Employee Training -->
                 <div class="text-box">
-                    <h3><a href="PhishingPreventionEmployeeTraining.html">Phishing Prevention Employee Training</a></h3>
-                    <p>Lets teams generate reports summarizing phishing email activity, detection rates, and user interactions.</p>
+                    <div class="icon">🎓</div>
+                    <h3><a href="/phishingPreventionEmployeeTraining.html">Employee Training Resources</a></h3> <!-- Fixed path -->
+                    <p>Training programs and phishing prevention simulations to enhance employee awareness and response to phishing attempts.</p>
                 </div>
             </div>
 
             <!-- Generate Reports -->
-            <div class="text-box" style="margin-top: 20px; width: 100%;">
-                <h3><a href="generatereports.html">Generate Reports</a></h3>
-                <p>Generate detailed reports summarizing phishing email activity, detection rates, and user interactions.</p>
+            <div class="text-box" style="margin: 30px auto; max-width: 800px;">
+                <div class="icon">📑</div>
+                <h3><a href="/generateReports.html">Generate Security Reports</a></h3> <!-- Fixed path -->
+                <p>Create detailed reports summarizing phishing email activity, detection rates, and user interactions for analysis and compliance.</p>
             </div>
 
-            <p style="text-align: center; margin-top: 20px;">
-                For more information on how your privacy is protected, refer to our <a href="#">Personal Information Collection Statement</a>.
-            </p>
+            <div class="privacy-notice">
+                <p>For more information on how your privacy is protected, refer to our <a href="#">Personal Information Collection Statement</a>.</p>
+            </div>
         </div>
     </main>
 
     <footer>
         <div class="footer-links">
-            <a href="#">Terms and Conditions</a> | <a href="#">Privacy</a>
+            <a href="#">Terms and Conditions</a> | <a href="#">Privacy Policy</a> | <a href="#">Accessibility</a>
         </div>
         <div class="footer-logo">
-            <a href="index.html"><img src="Images/CanadaLogo.jpg" alt="Canada Logo"></a>
+            <a href="/index.html"><img src="/Images/CanadaLogo.jpg" alt="Government of Canada Logo"></a> <!-- Updated path -->
         </div>
     </footer>
 </body>
