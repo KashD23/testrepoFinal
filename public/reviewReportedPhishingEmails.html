@@ -15,9 +15,81 @@
             --light-gray: #e9ecef;
         }
         
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-logo {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header-logo img {
+            max-width: 120px;
+            height: auto;
+        }
+        
+        .header-title {
+            text-align: center;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .dashboard-nav {
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .dashboard-nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        
+        .dashboard-nav a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-nav a:hover {
+            background: rgba(0, 76, 155, 0.1);
+        }
+        
+        .dashboard-nav .active a {
+            font-weight: 600;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        main {
+            flex: 1;
+            padding: 2rem 1rem;
+            background: var(--light);
+        }
+        
         .reports-container {
             max-width: 1200px;
-            margin: 2rem auto;
+            margin: 0 auto;
             padding: 2rem;
             background: white;
             border-radius: 12px;
@@ -145,6 +217,22 @@
             cursor: pointer;
         }
         
+        .dashboard-footer {
+            text-align: center;
+            padding: 1rem;
+            background: var(--light);
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .footer-links {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-branding img {
+            max-width: 100px;
+            height: auto;
+        }
+        
         @media (max-width: 768px) {
             .reports-table {
                 display: block;
@@ -153,6 +241,11 @@
             
             .reports-container {
                 padding: 1rem;
+            }
+            
+            .dashboard-nav ul {
+                flex-wrap: wrap;
+                gap: 0.5rem;
             }
             
             .reports-table td:nth-child(4) {
@@ -166,6 +259,9 @@
         <div class="header-logo">
             <a href="/index.html"><img src="/images/GOCLogo.png" alt="Government of Canada Logo"></a>
         </div>
+        <div class="header-title">
+            Phishing Prevention System
+        </div>
         <nav class="dashboard-nav">
             <ul>
                 <li><a href="/overview.html">Home</a></li>
@@ -177,7 +273,7 @@
         </nav>
     </header>
 
-    <main class="dashboard-container">
+    <main>
         <div class="reports-container">
             <div class="reports-header">
                 <h1 class="reports-title">Reported Phishing Emails</h1>
@@ -227,7 +323,7 @@
             <a href="/terms.html">Terms of Use</a>
         </div>
         <div class="footer-branding">
-            <img src="/images/CanadaLogo.jpg" alt="Canada Symbol" width="100">
+            <img src="/images/CanadaLogo.jpg" alt="Canada Symbol">
         </div>
     </footer>
 
@@ -291,10 +387,9 @@
                 displayEmails(emails);
             } catch (error) {
                 console.error('Failed to load emails:', error);
-                loadingMsg.innerHTML = `
-                    <p style="color: var(--danger);">Error loading reported emails. Please try again.</p>
-                    <button onclick="loadEmails()" class="btn">Retry</button>
-                `;
+                loadingMsg.innerHTML = 
+                    `<p style="color: var(--danger);">Error loading reported emails. Please try again.</p>
+                    <button onclick="loadEmails()" class="btn">Retry</button>`;
             }
         }
         
@@ -327,19 +422,18 @@
                     `/images/${encodeURIComponent(email.image)}` : 
                     null;
                 
-                row.innerHTML = `
-                    <td>${escapeHtml(email.sender) || 'Unknown sender'}</td>
+                row.innerHTML = 
+                    `<td>${escapeHtml(email.sender) || 'Unknown sender'}</td>
                     <td>${escapeHtml(email.subject) || 'No subject'}</td>
                     <td>${receivedDate}</td>
                     <td>
-                        ${imagePath ? `
-                            <img src="${imagePath}" 
+                        ${imagePath ? 
+                            `<img src="${imagePath}" 
                                  class="email-image" 
                                  alt="Email screenshot"
-                                 title="Click to enlarge">
-                        ` : 'No image available'}
-                    </td>
-                `;
+                                 title="Click to enlarge">` : 
+                            'No image available'}
+                    </td>`;
                 emailBody.appendChild(row);
             });
             

@@ -3,16 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Security Portal | Phishing Prevention</title>
+    <title>Phishing Prevention Portal | Government of Canada</title>
     <link rel="stylesheet" href="/css/main.css">
     <style>
         :root {
-            --primary: #4361ee;
-            --primary-dark: #3a56d4;
+            --primary: #004c9b;
+            --primary-dark: #003366;
             --light: #f8f9fa;
             --dark: #212529;
             --gray: #6c757d;
             --light-gray: #e9ecef;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-logo {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header-logo img {
+            max-width: 120px;
+            height: auto;
+        }
+        
+        .header-title {
+            text-align: center;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        main {
+            flex: 1;
+            padding: 2rem 1rem;
+            background: var(--light);
         }
         
         .hero {
@@ -35,6 +76,7 @@
             color: var(--gray);
             max-width: 700px;
             margin: 0 auto 2rem;
+            line-height: 1.6;
         }
         
         .btn {
@@ -48,77 +90,101 @@
             text-decoration: none;
             transition: all 0.3s ease;
             margin: 0.5rem;
-        }
-        
-        .btn-primary {
             background-color: var(--primary);
             color: white;
-            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 76, 155, 0.2);
+            border: none;
+            cursor: pointer;
         }
         
-        .btn-primary:hover {
+        .btn:hover {
             background-color: var(--primary-dark);
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(67, 97, 238, 0.3);
+            box-shadow: 0 6px 16px rgba(0, 76, 155, 0.3);
         }
         
-        .features {
+        .feature-teasers {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 2rem;
-            margin: 3rem 0;
+            margin: 3rem auto;
+            max-width: 1400px;
+            padding: 0 1rem;
         }
         
-        .feature-card {
+        .teaser-card {
             background: white;
             border-radius: 12px;
             padding: 2rem;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 1px solid var(--light-gray);
+            text-align: center;
+            transition: all 0.3s ease;
         }
         
-        .feature-card:hover {
+        .teaser-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary);
         }
         
-        .feature-icon {
-            font-size: 2.5rem;
+        .teaser-icon {
+            width: 60px;
+            height: 60px;
+            background-color: rgba(0, 76, 155, 0.1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
             color: var(--primary);
-            margin-bottom: 1rem;
+            font-size: 1.75rem;
         }
         
-        .feature-title {
-            font-size: 1.25rem;
+        .teaser-title {
+            font-size: 1.5rem;
             color: var(--dark);
             margin-bottom: 1rem;
         }
         
-        .feature-desc {
+        .teaser-desc {
             color: var(--gray);
             margin-bottom: 1.5rem;
+            line-height: 1.6;
         }
         
-        .feature-link {
+        .teaser-cta {
             color: var(--primary);
             font-weight: 600;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
+            font-size: 0.9rem;
+            padding-top: 1rem;
+            border-top: 1px dashed var(--light-gray);
         }
         
-        .feature-link:hover {
+        .dashboard-footer {
+            text-align: center;
+            padding: 1rem;
+            background: var(--light);
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .footer-links {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-links a {
+            color: var(--primary);
+            text-decoration: none;
+            margin: 0 0.5rem;
+        }
+        
+        .footer-links a:hover {
             text-decoration: underline;
         }
         
-        .feature-link::after {
-            content: "→";
-            margin-left: 0.5rem;
-            transition: transform 0.3s ease;
-        }
-        
-        .feature-link:hover::after {
-            transform: translateX(3px);
+        .footer-branding img {
+            max-width: 100px;
+            height: auto;
         }
         
         @media (max-width: 768px) {
@@ -137,59 +203,112 @@
     </style>
 </head>
 <body>
-    <div class="dashboard-container">
+    <header class="dashboard-header">
+        <div class="header-logo">
+            <a href="/index.html"><img src="/images/GOCLogo.png" alt="Government of Canada Logo"></a>
+        </div>
+        <div class="header-title">
+            Phishing Prevention System
+        </div>
+    </header>
+
+    <main>
         <div class="hero">
             <h1 class="hero-title">Phishing Prevention Portal</h1>
             <p class="hero-subtitle">
-                Our security platform helps identify, report, and prevent phishing attempts across
-                your organization with advanced detection and employee awareness tools.
+                Comprehensive security platform for authorized government personnel to detect, analyze,
+                and prevent phishing threats across your organization.
             </p>
-            <a href="/signin.html" class="btn btn-primary">Sign In to Security Portal</a>
+            <a href="/signin.html" class="btn">Sign In to Security Portal</a>
         </div>
         
-        <div class="features">
-            <div class="feature-card">
-                <div class="feature-icon">📧</div>
-                <h3 class="feature-title">Report Suspicious Emails</h3>
-                <p class="feature-desc">
-                    Quickly flag and report potential phishing attempts with our streamlined reporting system.
+        <div class="feature-teasers">
+            <div class="teaser-card">
+                <div class="teaser-icon">📧</div>
+                <h3 class="teaser-title">Reported Emails</h3>
+                <p class="teaser-desc">
+                    Review and analyze all flagged phishing attempts reported by employees across your organization.
                 </p>
-                <a href="/reviewReportedPhishingEmails.html" class="feature-link">View Reports</a>
+                <div class="teaser-cta">Available after authentication</div>
             </div>
             
-            <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3 class="feature-title">Security Analytics</h3>
-                <p class="feature-desc">
-                    Generate detailed reports on threat detection rates and employee response metrics.
+            <div class="teaser-card">
+                <div class="teaser-icon">📊</div>
+                <h3 class="teaser-title">Detection Logs</h3>
+                <p class="teaser-desc">
+                    Monitor system-detected phishing attempts and security events in real-time.
                 </p>
-                <a href="/generateReports.html" class="feature-link">View Analytics</a>
+                <div class="teaser-cta">Available after authentication</div>
             </div>
             
-            <div class="feature-card">
-                <div class="feature-icon">🎓</div>
-                <h3 class="feature-title">Training Resources</h3>
-                <p class="feature-desc">
-                    Access our library of training materials to improve your team's phishing awareness.
+            <div class="teaser-card">
+                <div class="teaser-icon">🎓</div>
+                <h3 class="teaser-title">Training Portal</h3>
+                <p class="teaser-desc">
+                    Access security awareness training materials and phishing simulation tools.
                 </p>
-                <a href="/phishingPreventionEmployeeTraining.html" class="feature-link">Start Learning</a>
+                <div class="teaser-cta">Available after authentication</div>
+            </div>
+            
+            <div class="teaser-card">
+                <div class="teaser-icon">📑</div>
+                <h3 class="teaser-title">Report Generator</h3>
+                <p class="teaser-desc">
+                    Create customized security reports for compliance and analysis purposes.
+                </p>
+                <div class="teaser-cta">Available after authentication</div>
+            </div>
+            
+            <div class="teaser-card">
+                <div class="teaser-icon">⚙️</div>
+                <h3 class="teaser-title">System Settings</h3>
+                <p class="teaser-desc">
+                    Configure security thresholds, notification preferences, and user permissions.
+                </p>
+                <div class="teaser-cta">Available after authentication</div>
+            </div>
+            
+            <div class="teaser-card">
+                <div class="teaser-icon">👥</div>
+                <h3 class="teaser-title">User Management</h3>
+                <p class="teaser-desc">
+                    Manage user accounts, roles, and access permissions for the security portal.
+                </p>
+                <div class="teaser-cta">Available after authentication</div>
             </div>
         </div>
-    </div>
+    </main>
+
+    <footer class="dashboard-footer">
+        <div class="footer-links">
+            <a href="/privacy.html">Privacy Policy</a>
+            <a href="/terms.html">Terms of Use</a>
+        </div>
+        <div class="footer-branding">
+            <img src="/images/CanadaLogo.jpg" alt="Canada Symbol">
+        </div>
+    </footer>
 
     <script>
-        // Add any interactive functionality here
+        // Simple animations for the teaser cards
         document.addEventListener('DOMContentLoaded', function() {
-            // Animation for feature cards
-            const featureCards = document.querySelectorAll('.feature-card');
-            featureCards.forEach((card, index) => {
-                card.style.opacity = '0';
-                card.style.transform = 'translateY(20px)';
-                card.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
+            // Fade in the whole page
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+            
+            // Animate the cards one by one
+            const teasers = document.querySelectorAll('.teaser-card');
+            teasers.forEach((teaser, index) => {
+                teaser.style.opacity = '0';
+                teaser.style.transform = 'translateY(20px)';
+                teaser.style.transition = `opacity 0.5s ease ${index * 0.1}s, transform 0.5s ease ${index * 0.1}s`;
                 
                 setTimeout(() => {
-                    card.style.opacity = '1';
-                    card.style.transform = 'translateY(0)';
+                    teaser.style.opacity = '1';
+                    teaser.style.transform = 'translateY(0)';
                 }, 100);
             });
         });
