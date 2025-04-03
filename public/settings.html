@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Settings | Phishing Prevention</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        :root {
+            --primary: #004c9b;
+            --primary-dark: #003366;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-logo {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header-logo img {
+            max-width: 120px;
+            height: auto;
+        }
+        
+        .header-title {
+            text-align: center;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .dashboard-nav {
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .dashboard-nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        
+        .dashboard-nav a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-nav a:hover {
+            background: rgba(0, 76, 155, 0.1);
+        }
+        
+        .dashboard-nav .active a {
+            font-weight: 600;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        main {
+            flex: 1;
+            padding: 2rem 1rem;
+            background: var(--light);
+        }
+
+        /* Settings Specific Styles */
+        .settings-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--light-gray);
+        }
+
+        .settings-section {
+            margin-bottom: 2.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px dashed var(--light-gray);
+        }
+
+        .settings-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .settings-title svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            fill: currentColor;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--light-gray);
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        .form-select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23004c9b' d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px;
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-check-input {
+            width: 1.25rem;
+            height: 1.25rem;
+            accent-color: var(--primary);
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-weight: 600;
+        }
+        
+        .btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-save {
+            background: var(--success);
+        }
+
+        .btn-save:hover {
+            background: #218838;
+        }
+
+        .permissions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .permission-card {
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .permission-card h4 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        /* Admin shield badge */
+        .admin-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(220, 53, 69, 0.1);
+            color: var(--danger);
+            padding: 0.5rem 1rem;
+            border-radius: 1rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+        }
+
+        /* Login gate styles */
+        #login-gate {
+            text-align: center;
+            padding: 3rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        #login-error {
+            color: var(--danger);
+            margin-top: 1rem;
+            display: none;
+        }
+
+        #admin-settings {
+            display: none;
+        }
+
+        .dashboard-footer {
+            text-align: center;
+            padding: 1rem;
+            background: var(--light);
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .footer-links {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-branding img {
+            max-width: 100px;
+            height: auto;
+        }
+
+        @media (max-width: 768px) {
+            .permissions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .settings-container {
+                padding: 1rem;
+            }
+            
+            .dashboard-nav ul {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="dashboard-header">
+        <div class="header-logo">
+            <a href="/index.html"><img src="/images/GOCLogo.png" alt="Government of Canada Logo"></a>
+        </div>
+        <div class="header-title">
+            Phishing Prevention System
+        </div>
+        <nav class="dashboard-nav">
+            <ul>
+                <li><a href="/overview.html">Home</a></li>
+                <li><a href="/reviewReportedPhishingEmails.html">Reports</a></li>
+                <li><a href="/reviewlogs.html">Logs</a></li>
+                <li><a href="/phishingPreventionEmployeeTraining.html">Training</a></li>
+                <li><a href="/generateReports.html">Export</a></li>
+                <li class="active"><a href="/settings.html">Settings</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Login Gate -->
+        <div id="login-gate" class="settings-container">
+            <h2>Administrator Login</h2>
+            <p>System configuration requires elevated privileges.</p>
+            
+            <div class="form-group">
+                <label for="admin-username" class="form-label">Username</label>
+                <input type="text" id="admin-username" class="form-control" placeholder="Enter admin username">
+            </div>
+            
+            <div class="form-group">
+                <label for="admin-password" class="form-label">Password</label>
+                <input type="password" id="admin-password" class="form-control" placeholder="Enter password">
+            </div>
+            
+            <button onclick="attemptAdminLogin()" class="btn btn-save" style="width: 100%;">Authenticate</button>
+            
+            <div id="login-error">
+                Invalid credentials. Try again.
+            </div>
+            
+            <p style="margin-top: 1.5rem; color: var(--gray);">
+                <small>By accessing this portal, you agree to the <a href="/terms.html">Terms of Use</a>.</small>
+            </p>
+        </div>
+
+        <!-- Admin Settings (Hidden until auth) -->
+        <div id="admin-settings" class="settings-container">
+            <div class="admin-badge">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M5.338 1.59a61.44 61.44 0 0 0-2.837.856.481.481 0 0 0-.328.39c-.554 4.157.726 7.19 2.253 9.188a10.725 10.725 0 0 0 2.287 2.233c.346.244.652.42.893.533.12.057.218.095.293.118a.55.55 0 0 0 .101.025.615.615 0 0 0 .1-.025c.076-.023.174-.061.294-.118.24-.113.547-.29.893-.533a10.726 10.726 0 0 0 2.287-2.233c1.527-1.997 2.807-5.031 2.253-9.188a.48.48 0 0 0-.328-.39c-.651-.213-1.75-.56-2.837-.855C9.552 1.29 8.531 1.067 8 1.067c-.53 0-1.552.223-2.662.524zM5.072.56C6.157.265 7.31 0 8 0s1.843.265 2.928.56c1.11.3 2.229.655 2.887.87a1.54 1.54 0 0 1 1.044 1.262c.596 4.477-.787 7.795-2.465 9.99a11.775 11.775 0 0 1-2.517 2.453 7.159 7.159 0 0 1-1.048.625c-.28.132-.581.24-.829.24s-.548-.108-.829-.24a7.158 7.158 0 0 1-1.048-.625 11.777 11.777 0 0 1-2.517-2.453C1.928 10.487.545 7.169 1.141 2.692A1.54 1.54 0 0 1 2.185 1.43 62.456 62.456 0 0 1 5.072.56z"/>
+                </svg>
+                Administrator Access
+            </div>
+
+            <!-- Security Thresholds Section -->
+            <div class="settings-section">
+                <h3 class="settings-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                    Security Thresholds
+                </h3>
+                
+                <div class="form-group">
+                    <label class="form-label">Phishing Confidence Level</label>
+                    <select class="form-control form-select">
+                        <option>Low (Wider detection, more false positives)</option>
+                        <option selected>Medium (Balanced approach)</option>
+                        <option>High (Strict detection, fewer false positives)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Auto-Quarantine Threshold</label>
+                    <input type="range" class="form-control" min="0" max="100" value="75">
+                    <div style="display: flex; justify-content: space-between; margin-top: 0.5rem;">
+                        <small>0% (Manual review)</small>
+                        <small>75% (Current)</small>
+                        <small>100% (Auto-block)</small>
+                    </div>
+                </div>
+                
+                <div class="form-check">
+                    <input type="checkbox" id="highrisk-alerts" class="form-check-input" checked>
+                    <label for="highrisk-alerts">Enable real-time alerts for high-risk emails</label>
+                </div>
+            </div>
+
+            <!-- Notification Preferences -->
+            <div class="settings-section">
+                <h3 class="settings-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                    </svg>
+                    Notification Preferences
+                </h3>
+                
+                <div class="form-group">
+                    <label class="form-label">Alert Channels</label>
+                    <div class="form-check">
+                        <input type="checkbox" id="email-alerts" class="form-check-input" checked>
+                        <label for="email-alerts">Email</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" id="sms-alerts" class="form-check-input">
+                        <label for="sms-alerts">SMS</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" id="dashboard-alerts" class="form-check-input" checked>
+                        <label for="dashboard-alerts">Dashboard Banner</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Daily Digest Time</label>
+                    <input type="time" class="form-control" value="08:00">
+                </div>
+            </div>
+
+            <!-- User Permissions -->
+            <div class="settings-section">
+                <h3 class="settings-title">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    User Permissions
+                </h3>
+                
+                <div class="permissions-grid">
+                    <div class="permission-card">
+                        <h4>Report Reviewers</h4>
+                        <div class="form-check">
+                            <input type="checkbox" id="perm-review" class="form-check-input" checked>
+                            <label for="perm-review">Can validate phishing reports</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="perm-flag" class="form-check-input">
+                            <label for="perm-flag">Can flag false positives</label>
+                        </div>
+                    </div>
+                    
+                    <div class="permission-card">
+                        <h4>Training Managers</h4>
+                        <div class="form-check">
+                            <input type="checkbox" id="perm-schedule" class="form-check-input">
+                            <label for="perm-schedule">Can schedule trainings</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="perm-track" class="form-check-input" checked>
+                            <label for="perm-track">Can track completion</label>
+                        </div>
+                    </div>
+                    
+                    <div class="permission-card">
+                        <h4>Auditors</h4>
+                        <div class="form-check">
+                            <input type="checkbox" id="perm-export" class="form-check-input" checked>
+                            <label for="perm-export">Can export logs</label>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" id="perm-audit" class="form-check-input">
+                            <label for="perm-audit">Can access audit trails</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-save">Save All Settings</button>
+        </div>
+    </main>
+
+    <footer class="dashboard-footer">
+        <div class="footer-links">
+            <a href="/privacy.html">Privacy Policy</a>
+            <a href="/terms.html">Terms of Use</a>
+        </div>
+        <div class="footer-branding">
+            <img src="/images/CanadaLogo.jpg" alt="Canada Symbol">
+        </div>
+    </footer>
+
+    <script>
+        // Admin authentication - uses admin/adminpass
+        function attemptAdminLogin() {
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+            const errorEl = document.getElementById('login-error');
+            
+            if (username === 'admin' && password === 'adminpass') {
+                localStorage.setItem('adminAuth', 'true');
+                document.getElementById('login-gate').style.display = 'none';
+                document.getElementById('admin-settings').style.display = 'block';
+            } else {
+                errorEl.style.display = 'block';
+                setTimeout(() => {
+                    errorEl.style.display = 'none';
+                }, 3000);
+            }
+        }
+
+        // Check auth on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('adminAuth') === 'true') {
+                document.getElementById('login-gate').style.display = 'none';
+                document.getElementById('admin-settings').style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>

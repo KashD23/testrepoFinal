@@ -5,15 +5,16 @@ const bcrypt = require('bcryptjs');
 const db = require('./database');
 const path = require('path');
 const ExcelJS = require('exceljs');
+const fs = require('fs');
 
 const app = express();
-const PORT = process.env.PORT || 3000; // Render will provide the PORT
+const PORT = process.env.PORT || 3000;
 
 // =============================================
 // Middleware Configuration
 // =============================================
 app.use(cors({
-  origin: "*", // Allow all origins (temporary solution)
+  origin: "*",
   methods: ["GET", "POST", "OPTIONS"],
   allowedHeaders: ["Content-Type"]
 }));
@@ -22,23 +23,69 @@ app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
 // =============================================
-// Static Files Configuration (Updated for Render)
+// Static Files Configuration
 // =============================================
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/Resources', express.static(path.join(__dirname, 'public/Resources')));
-app.use('/Images', express.static(path.join(__dirname, 'public/Images')));
+app.use('/resources', express.static(path.join(__dirname, 'public/resources')));
+app.use('/images', express.static(path.join(__dirname, 'public/images')));
 
 // =============================================
-// Database Initialization (SQLite)
+// Database Initialization
 // =============================================
-// Ensure database exists (Render-compatible path)
 const dbPath = process.env.NODE_ENV === 'production' 
-  ? path.join('/tmp', 'database.db') // Render ephemeral storage
+  ? path.join('/tmp', 'database.db')
   : path.join(__dirname, 'database.db');
 
 // =============================================
-// Routes
+// API Routes
 // =============================================
+
+// Training Resources Endpoint
+app.get('/api/resources', (req, res) => {
+  try {
+    // In production, you would query these from a database
+    const resources = [
+      {
+        id: 1,
+        name: "Phishing Awareness Video",
+        category: "Video Training",
+        type: "video",
+        filename: "phishing-awareness.mp4",
+        description: "Learn how to identify phishing attempts",
+        published: "2023-01-15"
+      },
+      {
+        id: 2,
+        name: "Security Best Practices",
+        category: "Document",
+        type: "pdf",
+        filename: "security-best-practices.pdf",
+        description: "Essential security practices for employees",
+        published: "2023-02-20"
+      },
+      {
+        id: 3,
+        name: "Phishing Examples",
+        category: "Image Gallery",
+        type: "image",
+        filename: "phishing-examples.jpg",
+        description: "Real-world phishing email examples",
+        published: "2023-03-10"
+      }
+    ];
+
+    // Verify resources actually exist in the filesystem
+    const verifiedResources = resources.filter(resource => {
+      const filePath = path.join(__dirname, 'public/resources', resource.filename);
+      return fs.existsSync(filePath);
+    });
+
+    res.json(verifiedResources);
+  } catch (error) {
+    console.error("Error loading resources:", error);
+    res.status(500).json({ error: "Failed to load resources" });
+  }
+});
 
 // Serve signin.html as homepage
 app.get('/', (req, res) => {
@@ -100,8 +147,6 @@ app.post('/report-email', (req, res) => {
     [from, subject, received, image], 
     function (err) {
       if (err) return res.status(500).json({ error: "internal_error" });
-      db.run("DELETE FROM reported_emails WHERE sender = ? AND subject = ? AND received = ?", 
-        [from, subject, received]);
       res.status(200).json({ success: true });
     }
   );
@@ -158,12 +203,8 @@ app.post('/generate-report', async (req, res) => {
       rows.forEach(row => worksheet.addRow([row.date, row.description, row.status]));
     }
 
-    // Render-compatible file handling
     const fileName = `Report_${year}_${type.replace(/\s+/g, '_')}.xlsx`;
-    res.setHeader(
-      'Content-Disposition',
-      `attachment; filename=${fileName}`
-    );
+    res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     
     await workbook.xlsx.write(res);
@@ -184,9 +225,15 @@ app.listen(PORT, () => {
   Local: http://localhost:${PORT}
   Render: https://testrepofinal.onrender.com
   `);
+  
+  // Create resources directory if it doesn't exist
+  const resourcesDir = path.join(__dirname, 'public/resources');
+  if (!fs.existsSync(resourcesDir)) {
+    fs.mkdirSync(resourcesDir, { recursive: true });
+    console.log('Created resources directory');
+  }
 });
 
-// Handle uncaught errors
 process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
 });

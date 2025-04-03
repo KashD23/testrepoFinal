@@ -17,9 +17,81 @@
             --light-gray: #e9ecef;
         }
         
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-logo {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header-logo img {
+            max-width: 120px;
+            height: auto;
+        }
+        
+        .header-title {
+            text-align: center;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .dashboard-nav {
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .dashboard-nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        
+        .dashboard-nav a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-nav a:hover {
+            background: rgba(0, 76, 155, 0.1);
+        }
+        
+        .dashboard-nav .active a {
+            font-weight: 600;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        main {
+            flex: 1;
+            padding: 2rem 1rem;
+            background: var(--light);
+        }
+        
         .logs-container {
             max-width: 1200px;
-            margin: 2rem auto;
+            margin: 0 auto;
             padding: 2rem;
             background: white;
             border-radius: 12px;
@@ -28,8 +100,8 @@
         }
         
         .logs-header {
-            margin-bottom: 2rem;
             text-align: center;
+            margin-bottom: 2rem;
         }
         
         .logs-title {
@@ -123,6 +195,36 @@
             border-left: 4px solid var(--danger);
         }
         
+        .btn {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: var(--primary-dark);
+        }
+        
+        .dashboard-footer {
+            text-align: center;
+            padding: 1rem;
+            background: var(--light);
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .footer-links {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-branding img {
+            max-width: 100px;
+            height: auto;
+        }
+        
         @media (max-width: 768px) {
             .logs-table {
                 display: block;
@@ -132,6 +234,11 @@
             .logs-container {
                 padding: 1rem;
             }
+            
+            .dashboard-nav ul {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
         }
     </style>
 </head>
@@ -139,6 +246,9 @@
     <header class="dashboard-header">
         <div class="header-logo">
             <a href="/index.html"><img src="/images/GOCLogo.png" alt="Government of Canada Logo"></a>
+        </div>
+        <div class="header-title">
+            Phishing Prevention System
         </div>
         <nav class="dashboard-nav">
             <ul>
@@ -151,7 +261,7 @@
         </nav>
     </header>
 
-    <main class="dashboard-container">
+    <main>
         <div class="logs-container">
             <div class="logs-header">
                 <h1 class="logs-title">Security Event Logs</h1>
@@ -193,7 +303,7 @@
             <a href="/terms.html">Terms of Use</a>
         </div>
         <div class="footer-branding">
-            <img src="/images/CanadaLogo.jpg" alt="Canada Symbol" width="100">
+            <img src="/images/CanadaLogo.jpg" alt="Canada Symbol">
         </div>
     </footer>
 
@@ -218,7 +328,7 @@
             noLogsMsg.style.display = 'none';
             
             try {
-                const response = await fetch('https://testrepofinal.onrender.com/logs');
+                const response = await fetch('/logs');
                 
                 if (!response.ok) {
                     throw new Error(`HTTP error! status: ${response.status}`);
@@ -257,7 +367,7 @@
                 const row = document.createElement('tr');
                 
                 // Format timestamp if available
-                const timestamp = log.timestamp ? formatDateTime(log.timestamp) : 'N/A';
+                const timestamp = log.date ? formatDateTime(log.date) : 'N/A';
                 
                 row.innerHTML = `
                     <td>${log.id || 'N/A'}</td>
