@@ -10,15 +10,88 @@
             --primary: #004c9b;
             --primary-dark: #003366;
             --success: #28a745;
+            --warning: #ffc107;
             --danger: #dc3545;
             --light: #f8f9fa;
             --gray: #6c757d;
             --light-gray: #e9ecef;
         }
         
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-logo {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header-logo img {
+            max-width: 120px;
+            height: auto;
+        }
+        
+        .header-title {
+            text-align: center;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .dashboard-nav {
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .dashboard-nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        
+        .dashboard-nav a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-nav a:hover {
+            background: rgba(0, 76, 155, 0.1);
+        }
+        
+        .dashboard-nav .active a {
+            font-weight: 600;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        main {
+            flex: 1;
+            padding: 2rem 1rem;
+            background: var(--light);
+        }
+        
         .quiz-container {
             max-width: 800px;
-            margin: 2rem auto;
+            margin: 0 auto;
             padding: 2rem;
             background: white;
             border-radius: 12px;
@@ -181,10 +254,30 @@
             display: none;
         }
         
+        .dashboard-footer {
+            text-align: center;
+            padding: 1rem;
+            background: var(--light);
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .footer-links {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-branding img {
+            max-width: 100px;
+            height: auto;
+        }
+        
         @media (max-width: 768px) {
             .quiz-container {
                 padding: 1rem;
-                margin: 1rem;
+            }
+            
+            .dashboard-nav ul {
+                flex-wrap: wrap;
+                gap: 0.5rem;
             }
             
             .quiz-actions {
@@ -198,6 +291,9 @@
         <div class="header-logo">
             <a href="/index.html"><img src="/images/GOCLogo.png" alt="Government of Canada Logo"></a>
         </div>
+        <div class="header-title">
+            Phishing Prevention System
+        </div>
         <nav class="dashboard-nav">
             <ul>
                 <li><a href="/overview.html">Home</a></li>
@@ -209,7 +305,7 @@
         </nav>
     </header>
 
-    <main class="dashboard-container">
+    <main>
         <div class="quiz-container">
             <div class="quiz-header">
                 <h1 class="quiz-title">Phishing Awareness Quiz</h1>
@@ -259,7 +355,149 @@
                 <div class="feedback" id="feedback2"></div>
             </div>
             
-            <!-- Questions 3-10 would follow the same pattern -->
+            <!-- Question 3 -->
+            <div class="question" id="question3">
+                <h3>3. What should you do if you receive a suspicious email?</h3>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q3" value="A"> Click on the links to verify
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q3" value="B"> Report it to your IT department
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q3" value="C"> Forward it to your colleagues
+                    </label>
+                </div>
+                <div class="result" id="result3"></div>
+                <div class="feedback" id="feedback3"></div>
+            </div>
+            
+            <!-- Question 4 -->
+            <div class="question" id="question4">
+                <h3>4. What is a common goal of phishing attacks?</h3>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q4" value="A"> To improve email security
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q4" value="B"> To steal sensitive information like passwords or credit card numbers
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q4" value="C"> To send promotional emails
+                    </label>
+                </div>
+                <div class="result" id="result4"></div>
+                <div class="feedback" id="feedback4"></div>
+            </div>
+            
+            <!-- Question 5 -->
+            <div class="question" id="question5">
+                <h3>5. Which of the following is NOT a recommended action when dealing with a phishing email?</h3>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q5" value="A"> Delete the email immediately
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q5" value="B"> Click on links to verify the sender
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q5" value="C"> Report the email to your IT department
+                    </label>
+                </div>
+                <div class="result" id="result5"></div>
+                <div class="feedback" id="feedback5"></div>
+            </div>
+            
+            <!-- Question 6 -->
+            <div class="question" id="question6">
+                <h3>6. What is spear phishing?</h3>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q6" value="A"> A type of fishing using a spear
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q6" value="B"> A targeted phishing attack on a specific individual or organization
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q6" value="C"> A type of email marketing campaign
+                    </label>
+                </div>
+                <div class="result" id="result6"></div>
+                <div class="feedback" id="feedback6"></div>
+            </div>
+            
+            <!-- Question 7 -->
+            <div class="question" id="question7">
+                <h3>7. What is a common indicator of a phishing email?</h3>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q7" value="A"> The email contains a legitimate company logo
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q7" value="B"> The email asks for sensitive information like passwords or credit card numbers
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q7" value="C"> The email is sent from a trusted sender
+                    </label>
+                </div>
+                <div class="result" id="result7"></div>
+                <div class="feedback" id="feedback7"></div>
+            </div>
+            
+            <!-- Question 8 -->
+            <div class="question" id="question8">
+                <h3>8. What should you do if you accidentally click on a link in a phishing email?</h3>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q8" value="A"> Ignore it and hope nothing happens
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q8" value="B"> Immediately report it to your IT department and change your passwords
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q8" value="C"> Forward the email to your colleagues
+                    </label>
+                </div>
+                <div class="result" id="result8"></div>
+                <div class="feedback" id="feedback8"></div>
+            </div>
+            
+            <!-- Question 9 -->
+            <div class="question" id="question9">
+                <h3>9. What is the purpose of a phishing email?</h3>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q9" value="A"> To provide helpful information
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q9" value="B"> To trick you into revealing sensitive information
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q9" value="C"> To promote a legitimate business
+                    </label>
+                </div>
+                <div class="result" id="result9"></div>
+                <div class="feedback" id="feedback9"></div>
+            </div>
+            
+            <!-- Question 10 -->
+            <div class="question" id="question10">
+                <h3>10. What is the best way to protect yourself from phishing attacks?</h3>
+                <div class="options">
+                    <label class="option">
+                        <input type="radio" name="q10" value="A"> Share your passwords with trusted colleagues
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q10" value="B"> Use strong, unique passwords and enable two-factor authentication
+                    </label>
+                    <label class="option">
+                        <input type="radio" name="q10" value="C"> Click on links in emails to verify their authenticity
+                    </label>
+                </div>
+                <div class="result" id="result10"></div>
+                <div class="feedback" id="feedback10"></div>
+            </div>
             
             <div class="score-display" id="score-display"></div>
             
@@ -276,7 +514,7 @@
             <a href="/terms.html">Terms of Use</a>
         </div>
         <div class="footer-branding">
-            <img src="/images/CanadaLogo.jpg" alt="Canada Symbol" width="100">
+            <img src="/images/CanadaLogo.jpg" alt="Canada Symbol">
         </div>
     </footer>
 
@@ -290,8 +528,39 @@
             q2: {
                 answer: "A",
                 explanation: "Phishing emails often contain poor grammar and spelling mistakes as they're frequently sent by non-native speakers."
+            },
+            q3: {
+                answer: "B",
+                explanation: "You should report suspicious emails to your IT department to prevent potential security breaches."
+            },
+            q4: {
+                answer: "B",
+                explanation: "The primary goal of phishing attacks is to steal sensitive information such as passwords, credit card numbers, or personal data."
+            },
+            q5: {
+                answer: "B",
+                explanation: "Clicking on links in a phishing email can lead to malware infections or data theft. Always verify the sender before clicking."
+            },
+            q6: {
+                answer: "B",
+                explanation: "Spear phishing is a targeted attack where the attacker customizes the email to trick a specific individual or organization."
+            },
+            q7: {
+                answer: "B",
+                explanation: "Phishing emails often ask for sensitive information like passwords or credit card numbers, which is a major red flag."
+            },
+            q8: {
+                answer: "B",
+                explanation: "If you accidentally click on a phishing link, report it immediately and change your passwords to secure your accounts."
+            },
+            q9: {
+                answer: "B",
+                explanation: "The purpose of a phishing email is to trick you into revealing sensitive information or downloading malware."
+            },
+            q10: {
+                answer: "B",
+                explanation: "Using strong, unique passwords and enabling two-factor authentication are the best ways to protect yourself from phishing attacks."
             }
-            // Additional questions would follow the same pattern
         };
 
         // Quiz state management
