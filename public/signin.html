@@ -15,9 +15,50 @@
             --light-gray: #e9ecef;
         }
         
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-logo {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header-logo img {
+            max-width: 120px;
+            height: auto;
+        }
+        
+        .header-title {
+            text-align: center;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+        
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
         .auth-container {
+            width: 100%;
             max-width: 450px;
-            margin: 3rem auto;
             padding: 2rem;
             background: white;
             border-radius: 12px;
@@ -112,7 +153,7 @@
         }
         
         .forgot-password {
-            text-align: right;
+            text-align: center;
             font-size: 0.9rem;
         }
         
@@ -125,10 +166,29 @@
             text-decoration: underline;
         }
         
+        .dashboard-footer {
+            text-align: center;
+            padding: 1rem;
+            background: var(--light);
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .footer-links {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-branding img {
+            max-width: 100px;
+            height: auto;
+        }
+        
         @media (max-width: 768px) {
             .auth-container {
-                margin: 1rem;
                 padding: 1.5rem;
+            }
+            
+            .header-logo img {
+                max-width: 100px;
             }
         }
     </style>
@@ -143,7 +203,7 @@
         </div>
     </header>
 
-    <main class="dashboard-container">
+    <main>
         <div class="auth-container">
             <div class="auth-header">
                 <h1 class="auth-title">Sign In</h1>
@@ -179,14 +239,14 @@
 
     <footer class="dashboard-footer">
         <div class="footer-links">
-            <a href="/privacy.html">Privacy Policy</a>
-            <a href="/terms.html">Terms of Use</a>
+            <a href="/privacy.html">Privacy Policy</a> | <a href="/terms.html">Terms of Use</a>
         </div>
         <div class="footer-branding">
-            <img src="/images/CanadaLogo.jpg" alt="Canada Symbol" width="100">
+            <img src="/images/CanadaLogo.jpg" alt="Canada Symbol">
         </div>
     </footer>
 
+    <!-- Keep your existing JavaScript here -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const signinForm = document.getElementById('signin-form');
