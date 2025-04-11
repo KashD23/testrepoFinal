@@ -246,118 +246,55 @@
         </div>
     </footer>
 
+    <!-- Keep your existing JavaScript here -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const signinForm = document.getElementById('signin-form');
-            const errorMessage = document.getElementById('error-message');
-            const togglePassword = document.querySelector('.toggle-password');
-            const passwordInput = document.getElementById('password');
-            
-            // Toggle password visibility
-            togglePassword.addEventListener('click', function() {
-                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordInput.setAttribute('type', type);
-                this.textContent = type === 'password' ? '👁️' : '🔒';
-            });
-            
-            // Form submission
-            signinForm.addEventListener('submit', async function(event) {
-                event.preventDefault();
-                
-                // Reset error message
-                errorMessage.style.display = 'none';
-                
-                const username = document.getElementById('username').value.trim();
-                const password = document.getElementById('password').value;
-                
-                // Basic client-side validation
-                if (!username || !password) {
-                    showError('Please fill in all fields');
-                    return;
-                }
-                
-                try {
-                    // Show loading state
-                    const submitBtn = signinForm.querySelector('button[type="submit"]');
-                    submitBtn.disabled = true;
-                    submitBtn.textContent = 'Signing In...';
-                    
-                    const response = await fetch('https://testrepofinal.onrender.com/signin', {
-                        method: 'POST',
-                        headers: { 
-                            'Content-Type': 'application/json',
-                            'X-Requested-With': 'XMLHttpRequest'
-                        },
-                        body: JSON.stringify({ 
-                            username, 
-                            password,
-                            device_info: navigator.userAgent
-                        })
-                    });
-                    
-                    const result = await response.json();
-                    
-                    if (response.ok) {
-                        if (result.requires2FA) {
-                            // Redirect to 2FA page if required
-                            window.location.href = `/verify-2fa.html?token=${result.tempToken}`;
-                        } else if (result.redirect) {
-                            // Redirect to the specified page
-                            window.location.href = result.redirect;
-                        } else {
-                            // Default redirect
-                            window.location.href = '/overview.html';
-                        }
-                    } else {
-                        // Handle specific error cases
-                        let errorMsg = 'An error occurred during sign in';
-                        
-                        if (result.error === 'invalid_credentials') {
-                            errorMsg = 'Invalid username or password';
-                        } else if (result.error === 'account_locked') {
-                            errorMsg = 'Account temporarily locked. Try again later or reset your password.';
-                        } else if (result.error === 'inactive_account') {
-                            errorMsg = 'Account inactive. Please contact support.';
-                        }
-                        
-                        showError(errorMsg);
-                        
-                        // Clear password field on error
-                        passwordInput.value = '';
-                        passwordInput.focus();
-                    }
-                } catch (error) {
-                    console.error('Sign in error:', error);
-                    showError('Network error. Please check your connection and try again.');
-                } finally {
-                    // Reset submit button
-                    const submitBtn = signinForm.querySelector('button[type="submit"]');
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Sign In';
-                }
-            });
-            
-            function showError(message) {
-                errorMessage.textContent = message;
-                errorMessage.style.display = 'block';
-                errorMessage.className = 'status-message status-error';
-                
-                // Focus the first error field if possible
-                const firstInvalidField = signinForm.querySelector(':invalid');
-                if (firstInvalidField) {
-                    firstInvalidField.focus();
-                }
-            }
-            
-            // Add basic form validation styling
-            signinForm.addEventListener('input', function(event) {
-                if (event.target.validity.valid) {
-                    event.target.classList.remove('invalid');
-                } else {
-                    event.target.classList.add('invalid');
-                }
-            });
-        });
+document.addEventListener('DOMContentLoaded', () => {
+  const signinForm = document.getElementById('signin-form');
+  const errorMessage = document.getElementById('error-message');
+
+  signinForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    // UI updates
+    errorMessage.style.display = 'none';
+    const submitBtn = signinForm.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Signing In...';
+
+    try {
+      const response = await fetch('/signin', {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          username: document.getElementById('username').value.trim(),
+          password: document.getElementById('password').value
+        })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Login failed');
+      }
+
+      // Redirect on success
+      if (data.redirect) {
+        window.location.href = data.redirect;
+      }
+
+    } catch (error) {
+      console.error('Login error:', error);
+      errorMessage.textContent = error.message || 'Network error. Please try again.';
+      errorMessage.style.display = 'block';
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Sign In';
+    }
+  });
+});
     </script>
 </body>
 </html>
