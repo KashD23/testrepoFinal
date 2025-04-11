@@ -10,7 +10,9 @@ const fs = require('fs');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// =============================================
 // Middleware Configuration
+// =============================================
 app.use(cors({
   origin: "*",
   methods: ["GET", "POST", "OPTIONS"],
@@ -20,10 +22,13 @@ app.use(cors({
 app.use(bodyParser.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Static Files Configuration
+// =============================================
+// Static Files Configuration - UPDATED
+// =============================================
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/resources', express.static(path.join(__dirname, 'public', 'resources'), {
   setHeaders: (res, filePath) => {
+    // Set proper Content-Type headers based on file extension
     const ext = path.extname(filePath);
     switch (ext) {
       case '.pdf':
@@ -41,10 +46,14 @@ app.use('/resources', express.static(path.join(__dirname, 'public', 'resources')
         break;
     }
   }
-}));
+});
 app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
 
+// =============================================
 // API Routes
+// =============================================
+
+// Training Resources Endpoint - COMPLETELY UPDATED
 app.get('/api/resources', (req, res) => {
   db.all(`
     SELECT 
@@ -66,6 +75,7 @@ app.get('/api/resources', (req, res) => {
       return res.status(500).json({ error: "Database error" });
     }
 
+    // Verify files exist and add accessible URLs
     const verifiedResources = rows.map(row => {
       const filename = path.basename(row.website_link);
       const filePath = path.join(__dirname, 'public', 'resources', filename);
@@ -78,8 +88,9 @@ app.get('/api/resources', (req, res) => {
         accessible: exists,
         description: `${row.category} training resource`
       };
-    }).filter(res => res.accessible);
+    }).filter(res => res.accessible); // Only return resources that actually exist
 
+    console.log('Sending resources:', verifiedResources); // Debug log
     res.json(verifiedResources);
   });
 });
@@ -90,8 +101,12 @@ app.get('/', (req, res) => {
 });
 
 // [Keep all your other existing routes unchanged...]
+// User Registration, Sign-In, Phishing Email Endpoints, etc.
+// ...
 
-// Server Startup
+// =============================================
+// Server Startup with Enhanced Validation
+// =============================================
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
   
@@ -112,7 +127,11 @@ app.listen(PORT, () => {
 
   expectedFiles.forEach(file => {
     const filePath = path.join(resourcesDir, file);
-    console.log(fs.existsSync(filePath) ? `✓ Found: ${file}` : `⚠️ Missing: ${file}`);
+    if (!fs.existsSync(filePath)) {
+      console.warn(`⚠️ Missing resource file: ${file}`);
+    } else {
+      console.log(`✓ Found resource file: ${file}`);
+    }
   });
 });
 
