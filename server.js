@@ -40,51 +40,37 @@ const dbPath = process.env.NODE_ENV === 'production'
 // API Routes
 // =============================================
 
-// Training Resources Endpoint
+// Training Resources Endpoint - UPDATED VERSION
 app.get('/api/resources', (req, res) => {
-  try {
-    // In production, you would query these from a database
-    const resources = [
-      {
-        id: 1,
-        name: "Phishing Awareness Video",
-        category: "Video Training",
-        type: "video",
-        filename: "phishing-awareness.mp4",
-        description: "Learn how to identify phishing attempts",
-        published: "2023-01-15"
-      },
-      {
-        id: 2,
-        name: "Security Best Practices",
-        category: "Document",
-        type: "pdf",
-        filename: "security-best-practices.pdf",
-        description: "Essential security practices for employees",
-        published: "2023-02-20"
-      },
-      {
-        id: 3,
-        name: "Phishing Examples",
-        category: "Image Gallery",
-        type: "image",
-        filename: "phishing-examples.jpg",
-        description: "Real-world phishing email examples",
-        published: "2023-03-10"
-      }
-    ];
+  db.all("SELECT * FROM resources", [], (err, rows) => {
+    if (err) {
+      console.error("Error loading resources:", err);
+      return res.status(500).json({ error: "Failed to load resources" });
+    }
 
-    // Verify resources actually exist in the filesystem
-    const verifiedResources = resources.filter(resource => {
-      const filePath = path.join(__dirname, 'public/resources', resource.filename);
-      return fs.existsSync(filePath);
+    // Format the data to match what the frontend expects
+    const resources = rows.map(row => {
+      // Extract the filename from the website_link
+      const filename = row.website_link.split('/').pop();
+      
+      // Determine the file type based on extension
+      let type = 'other';
+      if (filename.endsWith('.pdf')) type = 'pdf';
+      else if (filename.endsWith('.mp4') || filename.endsWith('.mov') || filename.endsWith('.avi')) type = 'video';
+      else if (filename.endsWith('.jpg') || filename.endsWith('.png') || filename.endsWith('.gif')) type = 'image';
+      
+      return {
+        name: row.resource_name,
+        category: row.category,
+        filename: filename,
+        type: type,
+        published: row.published,
+        description: `${row.category} resource`
+      };
     });
 
-    res.json(verifiedResources);
-  } catch (error) {
-    console.error("Error loading resources:", error);
-    res.status(500).json({ error: "Failed to load resources" });
-  }
+    res.json(resources);
+  });
 });
 
 // Serve signin.html as homepage
