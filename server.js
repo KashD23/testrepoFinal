@@ -169,7 +169,58 @@ app.get('/api/resources', (req, res) => {
 
 // Report Generation (Existing)
 app.post('/generate-report', async (req, res) => {
-  /* ... your existing report generation code ... */
+  const { year, type } = req.body;
+
+  if (!year || !type) {
+    return res.status(400).json({ error: "Missing year or type" });
+  }
+
+  let query = "";
+  let params = [year];
+
+  if (type === "employee_activity") {
+    query = "SELECT sender, subject, received FROM reviewed_phishing_emails WHERE strftime('%Y', received) = ?";
+  } else if (type === "detection_logs") {
+    query = "SELECT date, description, status FROM logs WHERE strftime('%Y', date) = ?";
+  } else {
+    return res.status(400).json({ error: "Invalid report type" });
+  }
+
+  try {
+    const rows = await new Promise((resolve, reject) => {
+      db.all(query, params, (err, rows) => {
+        if (err) reject(err);
+        else resolve(rows);
+      });
+    });
+
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "No data found" });
+    }
+
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Report');
+
+    // Add headers and data
+    if (type === "employee_activity") {
+      worksheet.addRow(["Sender", "Subject", "Received"]);
+      rows.forEach(row => worksheet.addRow([row.sender, row.subject, row.received]));
+    } else {
+      worksheet.addRow(["Date", "Description", "Status"]);
+      rows.forEach(row => worksheet.addRow([row.date, row.description, row.status]));
+    }
+
+    const fileName = `Report_${year}_${type.replace(/\s+/g, '_')}.xlsx`;
+    res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    
+    await workbook.xlsx.write(res);
+    res.end();
+    
+  } catch (error) {
+    console.error("Report generation failed:", error);
+    res.status(500).json({ error: "Report generation failed" });
+  }
 });
 
 // =============================================
