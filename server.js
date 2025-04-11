@@ -47,50 +47,10 @@ app.use('/resources', express.static(path.join(__dirname, 'public', 'resources')
 app.use('/images', express.static(path.join(__dirname, 'public', 'images')));
 
 // =============================================
-// API Routes
+// API Endpoints
 // =============================================
-app.get('/api/resources', (req, res) => {
-  db.all(`
-    SELECT 
-      id,
-      resource_name as name,
-      category,
-      website_link,
-      published,
-      CASE 
-        WHEN website_link LIKE '%.pdf' THEN 'pdf'
-        WHEN website_link LIKE '%.mp4' OR website_link LIKE '%.mov' OR website_link LIKE '%.avi' THEN 'video'
-        WHEN website_link LIKE '%.jpg' OR website_link LIKE '%.png' OR website_link LIKE '%.gif' THEN 'image'
-        ELSE 'other'
-      END as type
-    FROM resources
-  `, [], (err, rows) => {
-    if (err) {
-      console.error("Database error:", err);
-      return res.status(500).json({ error: "Database error" });
-    }
 
-    const verifiedResources = rows.map(row => {
-      const filename = path.basename(row.website_link);
-      const filePath = path.join(__dirname, 'public', 'resources', filename);
-      const exists = fs.existsSync(filePath);
-      
-      return {
-        ...row,
-        filename: filename,
-        url: `/resources/${filename}`,
-        accessible: exists,
-        description: `${row.category} training resource`
-      };
-    }).filter(res => res.accessible);
-
-    res.json(verifiedResources);
-  });
-});
-
-// =============================================
-// Enhanced Signin Endpoint (Only this was modified)
-// =============================================
+// Signin Endpoint (Enhanced)
 app.post('/signin', async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -122,28 +82,98 @@ app.post('/signin', async (req, res) => {
   }
 });
 
-// =============================================
-// Your Other Existing Routes (Unchanged)
-// =============================================
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'signin.html'));
-});
-
-// Phishing Email Endpoints (Keep your existing implementation)
+// Reports Endpoint (Fixed)
 app.get('/phishing-emails', (req, res) => {
-  db.all("SELECT * FROM reviewed_phishing_emails", [], (err, rows) => {
-    if (err) return res.status(500).json({ error: "internal_error" });
-    res.status(200).json(rows);
+  db.all(`
+    SELECT 
+      id, 
+      sender, 
+      subject, 
+      strftime('%Y-%m-%d %H:%M', received) as formatted_date
+    FROM reviewed_phishing_emails 
+    ORDER BY received DESC
+  `, [], (err, rows) => {
+    if (err) {
+      console.error('REPORTS ERROR:', err);
+      return res.status(500).json({ 
+        error: "Failed to load reports",
+        details: process.env.NODE_ENV === 'development' ? err.message : undefined
+      });
+    }
+    res.json(rows || []);
   });
 });
 
-// Report Generation (Keep your existing implementation)
+// Logs Endpoint (Fixed)
+app.get('/logs', (req, res) => {
+  db.all(`
+    SELECT 
+      log_id as id,
+      strftime('%Y-%m-%d %H:%M', datetime(date, 'localtime')) as date,
+      description,
+      status
+    FROM logs
+    ORDER BY date DESC
+    LIMIT 100
+  `, [], (err, rows) => {
+    if (err) {
+      console.error('LOGS ERROR:', err);
+      return res.status(500).json({
+        error: "Failed to load logs",
+        details: process.env.NODE_ENV === 'development' ? err.message : undefined
+      });
+    }
+    res.json(rows || []);
+  });
+});
+
+// Resources Endpoint (Existing)
+app.get('/api/resources', (req, res) => {
+  db.all(`
+    SELECT 
+      id,
+      resource_name as name,
+      category,
+      website_link,
+      published,
+      CASE 
+        WHEN website_link LIKE '%.pdf' THEN 'pdf'
+        WHEN website_link LIKE '%.mp4' OR website_link LIKE '%.mov' OR website_link LIKE '%.avi' THEN 'video'
+        WHEN website_link LIKE '%.jpg' OR website_link LIKE '%.png' OR website_link LIKE '%.gif' THEN 'image'
+        ELSE 'other'
+      END as type
+    FROM resources
+  `, [], (err, rows) => {
+    if (err) {
+      console.error("RESOURCES ERROR:", err);
+      return res.status(500).json({ error: "Database error" });
+    }
+
+    const verifiedResources = rows.map(row => {
+      const filename = path.basename(row.website_link);
+      const filePath = path.join(__dirname, 'public', 'resources', filename);
+      const exists = fs.existsSync(filePath);
+      
+      return {
+        ...row,
+        filename: filename,
+        url: `/resources/${filename}`,
+        accessible: exists,
+        description: `${row.category} training resource`
+      };
+    }).filter(res => res.accessible);
+
+    res.json(verifiedResources);
+  });
+});
+
+// Report Generation (Existing)
 app.post('/generate-report', async (req, res) => {
   /* ... your existing report generation code ... */
 });
 
 // =============================================
-// Server Startup (Unchanged)
+// Server Startup
 // =============================================
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
@@ -169,6 +199,16 @@ app.listen(PORT, () => {
   });
 });
 
+// Error Handling Middleware
+app.use((err, req, res, next) => {
+  console.error('UNHANDLED ERROR:', err);
+  res.status(500).json({ 
+    error: "Internal server error",
+    requestId: req.id
+  });
+});
+
 process.on('uncaughtException', (err) => {
-  console.error('Uncaught Exception:', err);
+  console.error('CRITICAL ERROR:', err);
+  process.exit(1);
 });
