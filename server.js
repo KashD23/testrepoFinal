@@ -128,25 +128,42 @@ app.get('/logs', (req, res) => {
 });
 
 // Resources Endpoint (Existing)
-app.get('/phishing-emails', (req, res) => {
+app.get('/api/resources', (req, res) => {
   db.all(`
     SELECT 
-      id, 
-      sender, 
-      subject, 
-      strftime('%Y-%m-%d %H:%M', received) as received,
-      NULL as image  // Added to match frontend expectations
-    FROM reviewed_phishing_emails 
-    ORDER BY received DESC
+      id,
+      resource_name as name,
+      category,
+      website_link,
+      published,
+      CASE 
+        WHEN website_link LIKE '%.pdf' THEN 'pdf'
+        WHEN website_link LIKE '%.mp4' OR website_link LIKE '%.mov' OR website_link LIKE '%.avi' THEN 'video'
+        WHEN website_link LIKE '%.jpg' OR website_link LIKE '%.png' OR website_link LIKE '%.gif' THEN 'image'
+        ELSE 'other'
+      END as type
+    FROM resources
   `, [], (err, rows) => {
     if (err) {
-      console.error('REPORTS ERROR:', err);
-      return res.status(500).json({ 
-        error: "Failed to load reports",
-        details: process.env.NODE_ENV === 'development' ? err.message : undefined
-      });
+      console.error("RESOURCES ERROR:", err);
+      return res.status(500).json({ error: "Database error" });
     }
-    res.json(rows || []);
+
+    const verifiedResources = rows.map(row => {
+      const filename = path.basename(row.website_link);
+      const filePath = path.join(__dirname, 'public', 'resources', filename);
+      const exists = fs.existsSync(filePath);
+      
+      return {
+        ...row,
+        filename: filename,
+        url: `/resources/${filename}`,
+        accessible: exists,
+        description: `${row.category} training resource`
+      };
+    }).filter(res => res.accessible);
+
+    res.json(verifiedResources);
   });
 });
 
