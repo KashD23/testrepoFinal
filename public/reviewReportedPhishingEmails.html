@@ -390,6 +390,20 @@
                 .replace(/'/g, "&#039;");
         }
     
+        // ============== NEW FUNCTION ADDED ==============
+        function getImageForIndex(index) {
+            // Only return paths for the first 3 emails (0,1,2 → 1,2,3)
+            if (index >= 0 && index < 3) {
+                return `/resources/email${index + 1}.jpg`;
+            }
+            return null;
+        }
+    
+        // ============== NEW FUNCTION ADDED ==============
+        function shouldShowPreview(index) {
+            return index < 3; // Only show preview for first 3 emails
+        }
+    
         function showFullImage(imageSrc) {
             const modal = document.getElementById('image-modal');
             const modalImg = document.getElementById('modal-image');
@@ -454,23 +468,26 @@
             emails.forEach((email, index) => {
                 const row = document.createElement('tr');
                 
-                // Calculate image number (1-based index or use email.id if available)
-                const imgNumber = (email.id && !isNaN(email.id)) ? email.id : index + 1;
-                const imgPath = `/resources/email${imgNumber}.jpg`;
-                
+                // ============== MODIFIED SECTION (ONLY THIS PART CHANGED) ==============
                 row.innerHTML = `
                     <td>${email.sender || 'Unknown'}</td>
                     <td>${email.subject || 'No subject'}</td>
                     <td>${email.formatted_date || email.received || 'Unknown date'}</td>
                     <td>
-                        <img src="${imgPath}" 
+                        ${shouldShowPreview(index) ? `
+                        <img src="${getImageForIndex(index)}" 
                              class="email-image" 
-                             alt="Email preview ${imgNumber}"
+                             alt="Email preview ${index + 1}"
                              onerror="this.style.display='none'"
-                             onclick="showFullImage('${imgPath}')">
-                        <span class="no-preview" style="display:none">No preview available</span>
+                             onclick="showFullImage('${getImageForIndex(index)}')">
+                        ` : ''}
+                        <span class="no-preview" ${shouldShowPreview(index) ? 'style="display:none"' : ''}>
+                            No preview available
+                        </span>
                     </td>
                 `;
+                // ============== END OF MODIFIED SECTION ==============
+                
                 emailBody.appendChild(row);
             });
             
