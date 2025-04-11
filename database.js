@@ -67,7 +67,8 @@ db.serialize(() => {
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             sender TEXT,
             subject TEXT,
-            received TEXT
+            received TEXT,
+            image TEXT  // Added column for image paths
         )
     `);
 
