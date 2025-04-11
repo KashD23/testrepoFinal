@@ -84,10 +84,24 @@ app.post('/signin', async (req, res) => {
 
 // Reports Endpoint (Fixed)
 app.get('/phishing-emails', (req, res) => {
-    db.all("SELECT * FROM reviewed_phishing_emails", [], (err, rows) => {
-        if (err) return res.status(500).json({ error: "internal_error" });
-        res.status(200).json(rows);
-    });
+  db.all(`
+    SELECT 
+      id, 
+      sender, 
+      subject, 
+      strftime('%Y-%m-%d %H:%M', received) as formatted_date
+    FROM reviewed_phishing_emails 
+    ORDER BY received DESC
+  `, [], (err, rows) => {
+    if (err) {
+      console.error('REPORTS ERROR:', err);
+      return res.status(500).json({ 
+        error: "Failed to load reports",
+        details: process.env.NODE_ENV === 'development' ? err.message : undefined
+      });
+    }
+    res.json(rows || []);
+  });
 });
 
 // Logs Endpoint (Fixed)
