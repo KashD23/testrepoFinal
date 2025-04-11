@@ -175,7 +175,7 @@ db.serialize(() => {
 
     const reviewedEmails = [
         { sender: "phisher@example.com", subject: "Urgent: Verify Your Account", received: "2023-10-01" },
-        { sender: "scam@example.com", subject: "You’ve Won a Prize!", received: "2023-10-02" }
+        { sender: "scam@example.com", subject: "You've Won a Prize!", received: "2023-10-02" }
     ];
 
     const trainingResources = [
@@ -188,6 +188,21 @@ db.serialize(() => {
     regularEmails.forEach(insertEmail);
     reviewedEmails.forEach(insertReviewedEmail);
     trainingResources.forEach(insertResource);
+
+    // =============================================
+    // Appended code to add image column if it doesn't exist
+    // =============================================
+    db.run(`
+        ALTER TABLE reviewed_phishing_emails 
+        ADD COLUMN image TEXT DEFAULT NULL
+    `, (err) => {
+        if (err) {
+            // Column likely already exists, which is fine
+            console.log("Image column already exists or couldn't be added:", err.message);
+        } else {
+            console.log("Successfully added image column to reviewed_phishing_emails table");
+        }
+    });
 });
 
 // Export the database object

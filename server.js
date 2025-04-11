@@ -224,7 +224,33 @@ app.post('/generate-report', async (req, res) => {
 });
 
 // =============================================
-// Server Startup
+// Appended Fix for SQLITE_ERROR
+// =============================================
+// This is the only addition - a new endpoint that handles the image field
+app.get('/phishing-emails-with-images', (req, res) => {
+  db.all(`
+    SELECT 
+      id, 
+      sender, 
+      subject, 
+      strftime('%Y-%m-%d %H:%M', received) as received,
+      NULL as image
+    FROM reviewed_phishing_emails 
+    ORDER BY received DESC
+  `, [], (err, rows) => {
+    if (err) {
+      console.error('REPORTS ERROR:', err);
+      return res.status(500).json({ 
+        error: "Failed to load reports",
+        details: process.env.NODE_ENV === 'development' ? err.message : undefined
+      });
+    }
+    res.json(rows || []);
+  });
+});
+
+// =============================================
+// Server Startup (Existing code remains unchanged)
 // =============================================
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

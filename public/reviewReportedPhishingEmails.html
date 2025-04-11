@@ -330,45 +330,46 @@
     </footer>
 
     <script>
-    // Existing functions (initModal, formatDate, escapeHtml) remain exactly the same
-
-    async function loadEmails() {
-        const loadingMsg = document.getElementById('loading-message');
-        const emailTable = document.getElementById('email-table');
-        const emailBody = document.getElementById('email-table-body');
-        const noEmailsMsg = document.getElementById('no-emails');
-        
-        // Show loading state
-        loadingMsg.innerHTML = '<div class="loading-spinner"></div><p>Loading reported emails...</p>';
-        loadingMsg.style.display = 'block';
-        emailTable.style.display = 'none';
-        noEmailsMsg.style.display = 'none';
-        
-        try {
-            const response = await fetch('https://testrepofinal.onrender.com/phishing-emails');
+        // Existing functions (initModal, formatDate, escapeHtml) remain exactly the same
+    
+        async function loadEmails() {
+            const loadingMsg = document.getElementById('loading-message');
+            const emailTable = document.getElementById('email-table');
+            const emailBody = document.getElementById('email-table-body');
+            const noEmailsMsg = document.getElementById('no-emails');
             
-            if (!response.ok) {
-                const errorData = await response.json().catch(() => ({}));
-                throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+            // Show loading state
+            loadingMsg.innerHTML = '<div class="loading-spinner"></div><p>Loading reported emails...</p>';
+            loadingMsg.style.display = 'block';
+            emailTable.style.display = 'none';
+            noEmailsMsg.style.display = 'none';
+            
+            try {
+                // Changed to use the new endpoint
+                const response = await fetch('https://testrepofinal.onrender.com/phishing-emails-with-images');
+                
+                if (!response.ok) {
+                    const errorData = await response.json().catch(() => ({}));
+                    throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+                }
+                
+                const emails = await response.json();
+                if (!Array.isArray(emails)) {
+                    throw new Error("Invalid data format received from server");
+                }
+                
+                displayEmails(emails);
+            } catch (error) {
+                console.error('Failed to load emails:', error);
+                loadingMsg.innerHTML = 
+                    `<div class="status-message status-error">
+                        <p>Error loading reported emails: ${escapeHtml(error.message)}</p>
+                        <button onclick="loadEmails()" class="btn">Retry</button>
+                    </div>`;
             }
-            
-            const emails = await response.json();
-            if (!Array.isArray(emails)) {
-                throw new Error("Invalid data format received from server");
-            }
-            
-            displayEmails(emails);
-        } catch (error) {
-            console.error('Failed to load emails:', error);
-            loadingMsg.innerHTML = 
-                `<div class="status-message status-error">
-                    <p>Error loading reported emails: ${escapeHtml(error.message)}</p>
-                    <button onclick="loadEmails()" class="btn">Retry</button>
-                </div>`;
         }
-    }
-
-    // Existing displayEmails function remains exactly the same
-</script>
+    
+        // Existing displayEmails function remains exactly the same
+    </script>
 </body>
 </html>
