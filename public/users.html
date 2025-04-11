@@ -6,7 +6,6 @@
     <title>User Management | Phishing Prevention</title>
     <link rel="stylesheet" href="/css/main.css">
     <style>
-        /* Reusing your existing variables */
         :root {
             --primary: #004c9b;
             --primary-dark: #003366;
@@ -16,6 +15,79 @@
             --light: #f8f9fa;
             --gray: #6c757d;
             --light-gray: #e9ecef;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-logo {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header-logo img {
+            max-width: 100px;
+            height: auto;
+        }
+        
+        .header-title {
+            text-align: center;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .dashboard-nav {
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .dashboard-nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        
+        .dashboard-nav a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-nav a:hover {
+            background: rgba(0, 76, 155, 0.1);
+        }
+        
+        .dashboard-nav .active a {
+            font-weight: 600;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        main {
+            flex: 1;
+            padding: 2rem 1rem;
+            background: var(--light);
         }
 
         .users-container {
@@ -190,6 +262,22 @@
             color: var(--gray);
         }
 
+        .dashboard-footer {
+            text-align: center;
+            padding: 1rem;
+            background: var(--light);
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .footer-links {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-branding img {
+            max-width: 80px;
+            height: auto;
+        }
+
         @media (max-width: 768px) {
             .user-table {
                 display: block;
@@ -199,13 +287,18 @@
             .users-container {
                 padding: 1rem;
             }
+            
+            .dashboard-nav ul {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
         }
     </style>
 </head>
 <body>
     <header class="dashboard-header">
         <div class="header-logo">
-            <a href="/index.html"><img src="/images/GOCLogo.png" alt="Government of Canada Logo"></a>
+            <a href="/index.html"><img src="/images/GOCLogo.png" alt="Government of Canada Logo" style="max-width: 100px;"></a>
         </div>
         <div class="header-title">
             Phishing Prevention System
@@ -380,7 +473,7 @@
             <a href="/terms.html">Terms of Use</a>
         </div>
         <div class="footer-branding">
-            <img src="/images/CanadaLogo.jpg" alt="Canada Symbol">
+            <img src="/images/CanadaLogo.jpg" alt="Canada Symbol" style="max-width: 80px;">
         </div>
     </footer>
 
