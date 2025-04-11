@@ -84,42 +84,12 @@ app.get('/api/resources', (req, res) => {
   });
 });
 
-// Signin Endpoint
-app.post('/signin', (req, res) => {
-  const { username, password } = req.body;
-
-  if (!username || !password) {
-    return res.status(400).json({ error: "Username and password required" });
-  }
-
-  db.get("SELECT * FROM users WHERE username = ?", [username.trim()], (err, user) => {
-    if (err) {
-      console.error("Database error:", err);
-      return res.status(500).json({ error: "Server error" });
-    }
-
-    if (!user) {
-      return res.status(401).json({ error: "Invalid credentials" });
-    }
-
-    bcrypt.compare(password, user.password, (err, isMatch) => {
-      if (err || !isMatch) {
-        return res.status(401).json({ error: "Invalid credentials" });
-      }
-
-      // Successful login
-      res.json({ 
-        success: true,
-        redirect: "/overview.html"
-      });
-    });
-  });
-});
-
 // Serve signin.html as homepage
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'signin.html'));
 });
+
+// [Keep all your other existing routes unchanged...]
 
 // Server Startup
 app.listen(PORT, () => {
