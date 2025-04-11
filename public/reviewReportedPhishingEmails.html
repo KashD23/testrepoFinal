@@ -330,7 +330,38 @@
     </footer>
 
 <script>
+    // Initialize when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        loadEmails();
+    });
+
     // Existing functions (initModal, formatDate, escapeHtml) remain exactly the same
+    function formatDate(dateString) {
+        if (!dateString) return 'N/A';
+        
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-CA', {
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } catch (e) {
+            console.error('Error formatting date:', e);
+            return dateString;
+        }
+    }
+
+    function escapeHtml(unsafe) {
+        return unsafe
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
 
     async function loadEmails() {
         const loadingMsg = document.getElementById('loading-message');
@@ -345,8 +376,8 @@
         noEmailsMsg.style.display = 'none';
         
         try {
-            // Changed to use the new endpoint
-            const response = await fetch('https://testrepofinal.onrender.com/phishing-emails-with-images');
+            // Changed to use the correct endpoint
+            const response = await fetch('/phishing-emails');
             
             if (!response.ok) {
                 const errorData = await response.json().catch(() => ({}));
@@ -369,7 +400,39 @@
         }
     }
 
-    // Existing displayEmails function remains exactly the same
+    function displayEmails(emails) {
+        const loadingMsg = document.getElementById('loading-message');
+        const emailTable = document.getElementById('email-table');
+        const emailBody = document.getElementById('email-table-body');
+        const noEmailsMsg = document.getElementById('no-emails');
+        
+        // Hide loading message
+        loadingMsg.style.display = 'none';
+        
+        // Clear existing rows
+        emailBody.innerHTML = '';
+        
+        if (!emails || emails.length === 0) {
+            noEmailsMsg.style.display = 'block';
+            return;
+        }
+        
+        // Add email rows
+        emails.forEach(email => {
+            const row = document.createElement('tr');
+            
+            row.innerHTML = `
+                <td>${email.sender || 'Unknown'}</td>
+                <td>${email.subject || 'No subject'}</td>
+                <td>${email.formatted_date || email.received || 'Unknown date'}</td>
+                <td>No preview available</td>
+            `;
+            emailBody.appendChild(row);
+        });
+        
+        // Show table
+        emailTable.style.display = 'table';
+    }
 </script>
 </body>
 </html>
