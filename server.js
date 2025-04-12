@@ -167,12 +167,19 @@ app.get('/api/resources', (req, res) => {
   });
 });
 
-// Report Generation (Existing)
+// Report Generation (Enhanced with validation)
 app.post('/generate-report', async (req, res) => {
   const { year, type } = req.body;
 
   if (!year || !type) {
     return res.status(400).json({ error: "Missing year or type" });
+  }
+
+  // ============== ADDED VALIDATION ==============
+  if (!["employee_activity", "detection_logs"].includes(type)) {
+    return res.status(400).json({ 
+      error: "Invalid report type. Use 'employee_activity' or 'detection_logs'" 
+    });
   }
 
   let query = "";
@@ -182,8 +189,6 @@ app.post('/generate-report', async (req, res) => {
     query = "SELECT sender, subject, received FROM reviewed_phishing_emails WHERE strftime('%Y', received) = ?";
   } else if (type === "detection_logs") {
     query = "SELECT date, description, status FROM logs WHERE strftime('%Y', date) = ?";
-  } else {
-    return res.status(400).json({ error: "Invalid report type" });
   }
 
   try {
@@ -211,7 +216,8 @@ app.post('/generate-report', async (req, res) => {
     }
 
     const fileName = `Report_${year}_${type.replace(/\s+/g, '_')}.xlsx`;
-    res.setHeader('Content-Disposition', `attachment; filename=${fileName}`);
+    // ============== FIXED CONTENT-DISPOSITION ==============
+    res.setHeader('Content-Disposition', `attachment; filename="${fileName}"`);
     res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     
     await workbook.xlsx.write(res);

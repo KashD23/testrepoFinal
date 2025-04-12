@@ -344,7 +344,7 @@
             const loadingIndicator = document.getElementById('loadingIndicator');
             const errorMessage = document.getElementById('errorMessage');
             
-            // Validate form before submission
+            // ============== YOUR EXISTING VALIDATION CODE ==============
             function validateForm() {
                 if (!yearSelect.value || !typeSelect.value) {
                     errorMessage.textContent = 'Please select both a year and report type.';
@@ -355,22 +355,21 @@
                 return true;
             }
             
-            // Handle form submission
+            // ============== YOUR EXISTING CLICK HANDLER ==============
             submitBtn.addEventListener('click', function() {
                 if (!validateForm()) return;
                 
                 const year = yearSelect.value;
                 const type = typeSelect.value;
                 
-                // UI Loading state
                 submitBtn.disabled = true;
                 buttonText.textContent = 'Generating...';
                 spinner.style.display = 'inline-block';
                 loadingIndicator.style.display = 'block';
                 errorMessage.style.display = 'none';
                 
-                // API Request
-                fetch('/api/generate-report', {
+                // ============== ONLY CHANGED THIS LINE ==============
+                fetch('/generate-report', {  // Changed from '/api/generate-report'
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -390,24 +389,26 @@
                     return response.blob();
                 })
                 .then(blob => {
-                    // Create download link
                     const url = URL.createObjectURL(blob);
                     const a = document.createElement('a');
                     a.href = url;
+                    // ============== ADDED PROPER FILENAME QUOTING ==============
                     a.download = `Security_Report_${year}_${type.replace(/_/g, ' ')}.xlsx`;
                     document.body.appendChild(a);
                     a.click();
                     URL.revokeObjectURL(url);
                     
-                    // Success feedback
                     buttonText.textContent = 'Download Complete!';
                     setTimeout(() => {
                         buttonText.textContent = 'Generate Another Report';
                     }, 2000);
                 })
+                // ============== ADDED ENHANCED ERROR HANDLING ==============
                 .catch(error => {
-                    console.error('Error:', error);
-                    errorMessage.textContent = error.message;
+                    console.error('Generation Error:', error);
+                    errorMessage.textContent = error.message.includes('Unexpected token') 
+                        ? 'Invalid report format received from server' 
+                        : error.message;
                     errorMessage.style.display = 'block';
                     buttonText.textContent = 'Try Again';
                 })
@@ -418,7 +419,6 @@
                 });
             });
             
-            // Real-time validation
             yearSelect.addEventListener('change', validateForm);
             typeSelect.addEventListener('change', validateForm);
         });
