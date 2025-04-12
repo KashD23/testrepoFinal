@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy | Phishing Prevention</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        :root {
+            --primary: #004c9b;
+            --primary-dark: #003366;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-logo {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header-logo img {
+            max-width: 120px;
+            height: auto;
+        }
+        
+        .header-title {
+            text-align: center;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .dashboard-nav {
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .dashboard-nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        
+        .dashboard-nav a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-nav a:hover {
+            background: rgba(0, 76, 155, 0.1);
+        }
+        
+        .dashboard-nav .active a {
+            font-weight: 600;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        main {
+            flex: 1;
+            padding: 2rem 1rem;
+            background: var(--light);
+        }
+        
+        .privacy-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--light-gray);
+        }
+        
+        .privacy-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .privacy-title {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .privacy-section {
+            margin-bottom: 2rem;
+        }
+        
+        .privacy-section h2 {
+            color: var(--primary-dark);
+            border-bottom: 1px solid var(--light-gray);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .privacy-section p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .privacy-section ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .dashboard-footer {
+            text-align: center;
+            padding: 1rem;
+            background: var(--light);
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .footer-links {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-branding img {
+            max-width: 100px;
+            height: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .privacy-container {
+                padding: 1rem;
+            }
+            
+            .dashboard-nav ul {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="dashboard-header">
+        <div class="header-logo">
+            <a href="/index.html"><img src="/images/GOCLogo.png" alt="Government of Canada Logo"></a>
+        </div>
+        <div class="header-title">
+            Phishing Prevention System
+        </div>
+        <nav class="dashboard-nav">
+            <ul>
+                <li><a href="/overview.html">Home</a></li>
+                <li><a href="/reviewReportedPhishingEmails.html">Reports</a></li>
+                <li><a href="/reviewlogs.html">Logs</a></li>
+                <li><a href="/phishingPreventionEmployeeTraining.html">Training</a></li>
+                <li><a href="/generateReports.html">Export</a></li>
+                <li><a href="/users.html">Users</a></li>
+                <li><a href="/settings.html">Settings</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="privacy-container">
+            <div class="privacy-header">
+                <h1 class="privacy-title">Privacy Policy</h1>
+            </div>
+            
+            <div class="privacy-section">
+                <h2>1. Information We Collect</h2>
+                <p>Our phishing prevention system collects the following information:</p>
+                <ul>
+                    <li>Reported email metadata (sender, subject, timestamp)</li>
+                    <li>User account information (username and encrypted password)</li>
+                    <li>System logs of security events</li>
+                    <li>Training completion records</li>
+                </ul>
+            </div>
+            
+            <div class="privacy-section">
+                <h2>2. How We Use Your Information</h2>
+                <p>We use collected information exclusively for:</p>
+                <ul>
+                    <li>Identifying and analyzing phishing attempts</li>
+                    <li>Improving our security systems</li>
+                    <li>Providing security training</li>
+                    <li>Generating security reports</li>
+                </ul>
+                <p>No personal email content is stored beyond what is necessary for security analysis.</p>
+            </div>
+            
+            <div class="privacy-section">
+                <h2>3. Data Retention</h2>
+                <p>We retain different types of information for varying periods:</p>
+                <ul>
+                    <li>Reported emails: 6 months</li>
+                    <li>Security logs: 12 months</li>
+                    <li>User accounts: Until deletion request</li>
+                    <li>Training records: 24 months</li>
+                </ul>
+            </div>
+            
+            <div class="privacy-section">
+                <h2>4. Your Rights</h2>
+                <p>You have the right to:</p>
+                <ul>
+                    <li>Request access to your personal data</li>
+                    <li>Request correction of inaccurate data</li>
+                    <li>Request deletion of your data</li>
+                    <li>Object to processing of your data</li>
+                </ul>
+                <p>To exercise these rights, please contact your organization's security administrator.</p>
+            </div>
+            
+            <div class="privacy-section">
+                <h2>5. Security Measures</h2>
+                <p>We implement robust security measures including:</p>
+                <ul>
+                    <li>Encryption of all stored data</li>
+                    <li>Role-based access controls</li>
+                    <li>Regular security audits</li>
+                    <li>Anonymization of reports</li>
+                </ul>
+            </div>
+            
+            <div class="privacy-section">
+                <h2>6. Changes to This Policy</h2>
+                <p>We may update this privacy policy periodically. The latest version will always be available on this page.</p>
+                <p>Last updated: January 2024</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="dashboard-footer">
+        <div class="footer-links">
+            <a href="/privacy.html">Privacy Policy</a>
+            <a href="/terms.html">Terms of Use</a>
+        </div>
+        <div class="footer-branding">
+            <img src="/images/CanadaLogo.jpg" alt="Canada Symbol">
+        </div>
+    </footer>
+</body>
+</html>
