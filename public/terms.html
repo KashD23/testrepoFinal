@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Use | Phishing Prevention</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <style>
+        :root {
+            --primary: #004c9b;
+            --primary-dark: #003366;
+            --light: #f8f9fa;
+            --gray: #6c757d;
+            --light-gray: #e9ecef;
+        }
+        
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .header-logo {
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header-logo img {
+            max-width: 120px;
+            height: auto;
+        }
+        
+        .header-title {
+            text-align: center;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .dashboard-nav {
+            width: 100%;
+            max-width: 800px;
+        }
+        
+        .dashboard-nav ul {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            padding: 0;
+            margin: 0;
+            list-style: none;
+        }
+        
+        .dashboard-nav a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .dashboard-nav a:hover {
+            background: rgba(0, 76, 155, 0.1);
+        }
+        
+        .dashboard-nav .active a {
+            font-weight: 600;
+            border-bottom: 2px solid var(--primary);
+        }
+        
+        main {
+            flex: 1;
+            padding: 2rem 1rem;
+            background: var(--light);
+        }
+        
+        .terms-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--light-gray);
+        }
+        
+        .terms-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .terms-title {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .terms-section {
+            margin-bottom: 2rem;
+        }
+        
+        .terms-section h2 {
+            color: var(--primary-dark);
+            border-bottom: 1px solid var(--light-gray);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .terms-section p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        
+        .terms-section ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .dashboard-footer {
+            text-align: center;
+            padding: 1rem;
+            background: var(--light);
+            border-top: 1px solid var(--light-gray);
+        }
+        
+        .footer-links {
+            margin-bottom: 0.5rem;
+        }
+        
+        .footer-branding img {
+            max-width: 100px;
+            height: auto;
+        }
+        
+        @media (max-width: 768px) {
+            .terms-container {
+                padding: 1rem;
+            }
+            
+            .dashboard-nav ul {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="dashboard-header">
+        <div class="header-logo">
+            <a href="/index.html"><img src="/images/GOCLogo.png" alt="Government of Canada Logo"></a>
+        </div>
+        <div class="header-title">
+            Phishing Prevention System
+        </div>
+        <nav class="dashboard-nav">
+            <ul>
+                <li><a href="/overview.html">Home</a></li>
+                <li><a href="/reviewReportedPhishingEmails.html">Reports</a></li>
+                <li><a href="/reviewlogs.html">Logs</a></li>
+                <li><a href="/phishingPreventionEmployeeTraining.html">Training</a></li>
+                <li><a href="/generateReports.html">Export</a></li>
+                <li><a href="/users.html">Users</a></li>
+                <li><a href="/settings.html">Settings</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="terms-container">
+            <div class="terms-header">
+                <h1 class="terms-title">Terms of Use</h1>
+            </div>
+            
+            <div class="terms-section">
+                <h2>1. Acceptance of Terms</h2>
+                <p>By accessing and using this Phishing Prevention System, you agree to be bound by these Terms of Use and all applicable laws and regulations.</p>
+                <p>If you do not agree with any of these terms, you are prohibited from using this system.</p>
+            </div>
+            
+            <div class="terms-section">
+                <h2>2. Authorized Use</h2>
+                <p>This system is intended for:</p>
+                <ul>
+                    <li>Reporting suspected phishing emails</li>
+                    <li>Reviewing security logs</li>
+                    <li>Completing required security training</li>
+                    <li>Generating security reports</li>
+                </ul>
+                <p>Any unauthorized use, including but not limited to misuse of data or system resources, is strictly prohibited.</p>
+            </div>
+            
+            <div class="terms-section">
+                <h2>3. User Responsibilities</h2>
+                <p>As a user of this system, you agree to:</p>
+                <ul>
+                    <li>Maintain the confidentiality of your account credentials</li>
+                    <li>Report suspicious emails in good faith</li>
+                    <li>Complete all required security training</li>
+                    <li>Comply with all organizational security policies</li>
+                </ul>
+            </div>
+            
+            <div class="terms-section">
+                <h2>4. System Availability</h2>
+                <p>We strive to maintain system availability but cannot guarantee uninterrupted access. Scheduled maintenance and unexpected outages may occur.</p>
+                <p>Critical security reports should not be delayed due to reliance on this system's availability.</p>
+            </div>
+            
+            <div class="terms-section">
+                <h2>5. Limitation of Liability</h2>
+                <p>The Government of Canada shall not be liable for:</p>
+                <ul>
+                    <li>Any indirect, incidental, or consequential damages</li>
+                    <li>Loss of data or profits</li>
+                    <li>Security incidents resulting from user negligence</li>
+                </ul>
+            </div>
+            
+            <div class="terms-section">
+                <h2>6. Modifications to Terms</h2>
+                <p>We reserve the right to modify these terms at any time. Continued use of the system after changes constitutes acceptance of the modified terms.</p>
+                <p>Last updated: January 2024</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="dashboard-footer">
+        <div class="footer-links">
+            <a href="/privacy.html">Privacy Policy</a>
+            <a href="/terms.html">Terms of Use</a>
+        </div>
+        <div class="footer-branding">
+            <img src="/images/CanadaLogo.jpg" alt="Canada Symbol">
+        </div>
+    </footer>
+</body>
+</html>
